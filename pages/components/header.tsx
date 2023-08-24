@@ -1,5 +1,3 @@
-"use client";
-
 import HeaderLink from "./headerLink";
 
 export default function Header(): React.ReactElement {
