@@ -1,5 +1,6 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { getAllPosts } from "@/libs/post";
+import { MDXRemoteProps } from "next-mdx-remote";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();
@@ -10,10 +11,10 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = ({ params }) => {
-  const { slugs } = params as { slugs: string[] };
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params as { slug: string[] };
 
-  const slugString = `posts/${[...slugs].join("/")}`;
+  const slugString = `/posts/${[...slug].join("/")}`;
   const post = getAllPosts().find((post) => post.slug === slugString);
 
   if (!post) {
@@ -23,12 +24,15 @@ export const getStaticProps: GetStaticProps = ({ params }) => {
   }
 
   return {
-    props: {
-      slugString,
-    },
+    props: { slugString },
   };
 };
 
-export default function Page({ slug }: { slug: string }): React.ReactElement {
-  return <p>Post: {slug}</p>;
+export default function Page({
+  slugString,
+}: {
+  slugString: string;
+  mdx: MDXRemoteProps;
+}): React.ReactElement {
+  return <p>Post: {slugString}</p>;
 }

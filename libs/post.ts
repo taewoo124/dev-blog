@@ -5,7 +5,7 @@ import matter from "gray-matter";
 import dayjs from "dayjs";
 import { Post, PostMatter } from "./types";
 
-const BASE_PATH = "/blogPosts";
+const BASE_PATH = "/posts";
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
 export const getAllPosts = () => {
