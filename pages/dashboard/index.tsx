@@ -4,6 +4,7 @@ import Header from "../components/header";
 import Posts from "../components/posts";
 import BannerImage from "../components/image";
 import Intro from "../components/intro";
+import PostPage from "../posts";
 
 export default function Home(): React.ReactElement {
   return (
