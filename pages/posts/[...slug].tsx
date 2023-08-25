@@ -3,6 +3,8 @@ import { getAllPosts } from "@/libs/post";
 import { serializeMdx } from "@/libs/mdx";
 import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 import { Post } from "@/libs/types";
+import Title from "./components/Title";
+import Header from "../components/header";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();
@@ -27,19 +29,28 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const mdx = await serializeMdx(post.content);
 
   return {
-    props: { mdx },
+    props: { mdx, post },
   };
 };
 
 export default function Page({
   mdx,
+  post,
 }: {
   mdx: MDXRemoteSerializeResult;
   post: Post;
 }) {
   return (
-    <div>
-      <MDXRemote {...mdx} />
+    <div className="flex justify-center">
+      <div className="w-8/12">
+        <Header />
+        <Title post={post} />
+        <div className="flex flex-col items-center mt-14">
+          <div className="prose flex flex-col items-center">
+            <MDXRemote {...mdx} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

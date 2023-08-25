@@ -36,6 +36,6 @@ const config: Config = {
       serif: ["Merriweather", "serif"],
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };
 export default config;

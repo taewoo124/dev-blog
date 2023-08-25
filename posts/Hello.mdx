@@ -1,11 +1,289 @@
 ---
-title: "Hello"
+title: "Webpack"
 description: "시험작업 입니다."
 tags: ["dd", "ww", "ee", "123123"]
 ---
 
-# Hello!
+# 정의
 
-## 안녕하세요!
+---
 
-### 반갑습니다!
+현대 자바스크립트 애플리케이션을 위한 모듈 번들러이다. 웹팩은 프로젝트의 여러 파일과 의존성을 분석하여 이를 하나의 번들(bundle)로 묶어준다. 이 번들은 웹 브라우저에서 실행될 수 있도록 최적화될 수 있다.
+
+## 번들링
+
+---
+
+개발자는 애플리케이션을 모듈, 구성 요소 및 함수로 나누어 더 큰 규모의 애플리케이션을 구축하는 데 사용할 수 있다.
+이러한 내부 모듈과 외부 타사 패키지를 내보내고 가져오면 복잡한 파일 종속성 웹이 생성된다.
+
+번들링은 사용자가 웹 페이지를 방문할 때 파일 요청 횟수를 줄이기 위해 종속성 웹을 해결하고,
+파일 또는 모듈을 브라우저에 최적화된 번들로 병합하는 프로세스이다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8564e446-7e61-4d94-ac9a-da6d07e782c0/Untitled.png)
+
+---
+
+---
+
+# 등장배경
+
+---
+
+## Module
+
+---
+
+자바스크립트에서 모듈은 코드를 재사용하기 위해 분리하여 조작하는 방법을 제공하는 코드 단위이다. 모듈은 함수, 변수 , 클래스 등의 코드를 내보낼 수 있으며, 다른 모듈에서 그 내용을 가져와 사용할 수 있다.
+
+자바스크립트가 문법 수준에서 모듈을 지원하기 시적한 것은 ES6에서 부터다. 이전에는 Common JS 또는 AMD (Asynchronous Module Definition)와 같은 라이브러리 및 규약을 통해 모듈 기능을 구현했다.
+
+ES6 모듈의 기본 사용 방법
+
+**_Export_**
+
+```tsx
+// exampleModule.ts
+
+export function multiple(x: number, y: number): number {
+  return x * y;
+}
+
+export function divide(x: number, y: number): number {
+  return x / y;
+}
+```
+
+**_import_**
+
+```tsx
+import { multiple, divide } from "./exampleModues.ts";
+
+console.log(multiple(5, 5)); // 25
+console.log(divide(20, 4)); // 5
+```
+
+### ES6 이전에는 모듈을 어떻게 구현했을까?
+
+---
+
+**_Commont JS_**
+
+```tsx
+// math.ts
+
+var add = function (x: number, y: number): number {
+  return x + y;
+};
+
+var subtract = function (x: number, y: number): number {
+  return x - y;
+};
+
+module.exports = {
+  add: add,
+  subtract: subtract,
+};
+
+// app.ts
+
+var math = require("./math");
+
+console.log(math.add(2, 3)); // 5;
+console.log(math.subtract(8, 1)); // 7;
+```
+
+**_AMD_**
+
+```tsx
+define([], function() {
+	var add = function(x: number, y: number): number {
+		return x + y;
+	};
+
+	var subtract = function(x: number, y: number): number {
+		return x - y;
+	};
+
+	return {
+		add: add,
+		subtract: subtrack
+	};
+});
+
+require(["math], function(math) {
+	console.log(matn.add(2, 3));
+});
+```
+
+## Entry / Output
+
+---
+
+웹팩은 여러개의 파일을 하나의 파일로 합쳐주는 번들러다. 하나의 시작점으로부터 의존적인 모듈을 전부 찾아내서 하나의 결과물을 만들어낸다.
+
+엔트리 포인트는 웹팩이 내부 종속성 그래프 작성을 **_시작할 때_** 어떤 모듈을 사용해야 하는지를 나타낸다.
+웹팩은 해당 엔트리 포인트가 직간접적으로 의존하는 다른 모듈과 라이브러리를 파악한다.
+
+<aside>
+💡 애플리케이션 번들링은 브라우저가 새 요청을 시작하는 동안 앱이 대기해야 하는 횟수를 최소화하기 때문에 HTTP/1.1 클라이언트에서 특히 유용하다. HTTP/2의 경우 분할을 사용해 최상의 결과를 얻을 수 도 있다.
+
+</aside>
+
+웹팩에서는 `--mode`, `--entry`, `--output` 세 개 옵션만 사용하면 코드를 묶을 수 있다.
+
+webpack.config.js
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6125d6fc-027b-4ed4-a480-40a07d47acd4/Untitled.png)
+
+development mode
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5320ae94-1980-4fc7-a64f-fc3990a22b20/Untitled.png)
+
+`**--mode`\*\*
+
+- 웹팩 실행 모드를 의미한다.
+- development - 개발 버전
+- production - 배포 버전
+
+위 명령어를 실행하면 `dist/main.js`에 번들링된 결과가 저장된다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c6167345-97d4-4b63-8f4f-2cd535c6ac63/Untitled.png)
+
+# 로더
+
+---
+
+기본적으로 웹팩은 JS와 JSON파일만 이해한다. 이때 로더를 사용하면 웹팩이 다른 유형의 파일을 처리하여 애플리케이션에서 사용할 수 있고 종속성 그래프에 추가할 수 있는 유효한 모듈로 변환할 수 있다.
+
+## 커스텀 로더 만들기
+
+---
+
+// 루트 디렉터리에 my-webpack-loaders.js 파일 생성
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/404ea371-f66a-4a03-ba6c-7a0329bbb53f/Untitled.png)
+
+// webpack.config.js에 로더 설정
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d4e89397-eb81-4d2e-a430-3a8d283d7b06/Untitled.png)
+
+// 빌드
+
+![현재 src 폴더에 js 파일이 2개 있기 때문에, loader가 두번 실행되는것을 볼 수 있다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6230a369-2d48-484a-998d-a647b21c1944/Untitled.png)
+
+현재 src 폴더에 js 파일이 2개 있기 때문에, loader가 두번 실행되는것을 볼 수 있다.
+
+### **_CSS-loader_**
+
+---
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7b7291f3-0aad-4f50-8073-592b7a5411c0/Untitled.png)
+
+아무런 설정도 없이 css모듈을 import 후 빌드를 하려고 하면 웹팩은 에러를 던진다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3beb84ef-de73-4c1a-af97-41f16844e240/Untitled.png)
+
+우리가 웹팩에 css 파일을 해석할 수 있도록 설정해주지 않았기 때문에 발생하는 에러이다.
+
+웹팩이 css파일을 이해할 수 있도록 해주려면 `css-loader`를 설정해주면 된다.
+
+![npm install css-loader 로 설치](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/85754058-1952-4e3c-bc2c-2bf1b8432308/Untitled.png)
+
+npm install css-loader 로 설치
+
+![사용할 로더를 설정해준다. 이 경우 css-loader](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c8d66ec6-b5f1-4ea9-85ec-04b44e30e329/Untitled.png)
+
+사용할 로더를 설정해준다. 이 경우 css-loader
+
+설정 후 다시 빌드 실행을 하면 정상적으로 빌드된 것을 볼 수 있다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9f097d2c-1291-4058-a9ea-eec205a74456/Untitled.png)
+
+// 빌드된 /dist/main.js
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/884ad484-df28-4aa1-9ba8-3445d0e8298a/Untitled.png)
+
+하지만 브라우저로 들어가서 css가 제대로 적용 됐는지 확인해보면 적용되지 않았다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/15f79c3e-1de4-4f09-b19e-07bd6f624a6f/Untitled.png)
+
+이는 CSS 코드가 CSSOM 을 생성해야 스타일이 적용되는데 우리는 아직 `js` 파일에만 모듈을 가져왔을 뿐 `index.html` 파일에 style 태그를 삽입하거나 인라인태그로 적용하지 않았기 때문이다.
+
+이런 상황에서 필요한 것이 바로 `style-loader`이다.
+
+![위와 같이 style-loader를 설치하고 use 배열에 추가해준다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/47803c50-216c-4422-afc3-2b845164fdbf/Untitled.png)
+
+위와 같이 style-loader를 설치하고 use 배열에 추가해준다.
+
+빌드 후 브라우저를 확인해보면 스타일이 제대로 적용된 것을 볼 수 있다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/88e34060-16df-483d-a224-8ea20b90d30f/Untitled.png)
+
+## Asset Modules - 추가 내용 & 실습 예정
+
+---
+
+webpack5 이전에는 아래와 같이 url을 이용해 이미지를 불러오기 위해서는 file-loader설정이 필요했다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b7205108-d66f-47c9-86b4-aca59a9bb8fe/Untitled.png)
+
+webpack5에서는 이러한 로더를 대체하기 위해 `asset module` 에 4개의 새로운 모듈 유형이 추가되었다.
+
+1. Asset Resource - 파일을 출력 디렉터리에 복사하고 해당 파일의 URL을 반환한다.
+   1. 이전의 file-loader와 유사하게 동작
+2. Asset Inline - 파일을 Base64로 인코딩하여 번들에 인라인으로 포함시킨다.
+   1. 이전의 url-loader와 유사하게 동작
+3. Asset - 파일의 크기에 따라 Asset Resource나 Asset Inline중 하나를 선택적으로 적용한다.
+   1. 크기 한도를 `parser.dataUrlCondition.maxSize` 속성으로 설정할 수 있다.
+4. Asset Source - 파일의 내용을 문자열로 반환한다.
+   1. 이전의 raw-loader와 유사하게 동작
+
+# Plugin
+
+---
+
+로더는 파일 단위로 처리하는 반면, 플러그인은 번들된 결과물을 처리한다.
+
+번들된 자바스크립트를 난독화 하거나, 특정 텍스트를 추출하는 용도로 사용한다.
+
+## 커스텀 플러그인
+
+---
+
+// 루트 디렉터리에 my-webpack-plugin.js 파일 생성
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e7911d4-a3e3-414d-b81a-9c051b95fbf9/Untitled.png)
+
+![plugins 배열에 생성자 함수 생성.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/20c31c6a-e4c6-4d5c-ac26-9559b2025d77/Untitled.png)
+
+plugins 배열에 생성자 함수 생성.
+
+![정상적으로 The webpack build process is starting!이 출력되는것을 확인할 수 있다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d1f9f266-f357-4984-8a16-f8d2a1143797/Untitled.png)
+
+정상적으로 The webpack build process is starting!이 출력되는것을 확인할 수 있다.
+
+## 자주 사용하는 플러그인
+
+---
+
+1. **BannerPlugin**
+   1. 결과물에 빌드 정보나 커밋 버전같은 걸 추가할 수 있다.
+2. **DefinePlugin**
+   1. 컴파일 타임에 구성할 수 있는 전역 상수를 만들 수 있다.
+   2. 이는 개발 빌드와 브로덕션 빌드 간에 서로 다른 동작을 하고싶을 때 유용하다.
+3. **HtmlWebpackPlugin**
+   1. 웹팩으로 번들링 된 결과물을 쉽게 HTML 파일에 주입해주는 플러그인이다.
+   2. SPA에서 유용하게 사용된다.
+4. **CleanWebpackPlugin**
+   1. JS파일에서 추출된 CSS를 별도의 파일로 분리해주는 플러그인
+5. **OptimizeCSSAssetPlugin**
+   1. CSS 파일을 최적화하고 미니파이하는 데 사용되는 플러그인
+6. **TerserPlugin**
+   1. 자바스크립트를 미니파이 및 최적화하는 데 사용되는 플러그인
+7. **HotModuleReplacementPlugin**
+   1. 모듈 핫 리로딩을 지원하기 위한 플러그인
+   2. 개발 중 코드를 변경할 때 페이지를 새로고침하지 않고도 변경 사항을 반영
+8. **CompressionWebpackPlugin**
+   1. 빌드된 리소스들을 Gzip 압축 형식으로 제공하기 위한 플러그인
+   2. 네트워크 전송 시간을 줄일 수 있다.
