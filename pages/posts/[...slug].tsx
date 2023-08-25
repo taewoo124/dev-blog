@@ -41,7 +41,7 @@ export default function Page({
   post: Post;
 }) {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center ">
       <div className="w-8/12">
         <Header />
         <Title post={post} />

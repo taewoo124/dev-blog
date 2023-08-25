@@ -5,7 +5,7 @@ export default function HeaderLink({
 }) {
   return (
     <span>
-      <h1 className="text-2xl text-white flex items-center font-bold mx-4">
+      <h1 className="text-2xl text-black flex items-center font-bold mx-4">
         {children}
       </h1>
     </span>
