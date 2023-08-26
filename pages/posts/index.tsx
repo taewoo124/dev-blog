@@ -21,12 +21,12 @@ export default function PostPage({
 }): React.ReactElement {
   return (
     <div className="flex flex-col items-center">
-      <div className="w-8/12">
+      <div className="w-7/12">
         <Header />
         <BannerImage />
         <Intro />
       </div>
-      <div className="inline-grid gap-4 grid-cols-2 w-8/12 mt-16">
+      <div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
         {posts.map((post, i) => (
           <Link key={i} href={post.slug} className="pointer">
             <PostBanner title={post.title} tags={post.tags} date={post.date} />

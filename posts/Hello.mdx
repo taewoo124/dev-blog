@@ -4,6 +4,8 @@ description: "webpack기초 정리"
 tags: ["Webpack", "FrontEnd"]
 ---
 
+## TOC
+
 # 정의
 
 ---
@@ -20,7 +22,7 @@ tags: ["Webpack", "FrontEnd"]
 번들링은 사용자가 웹 페이지를 방문할 때 파일 요청 횟수를 줄이기 위해 종속성 웹을 해결하고,
 파일 또는 모듈을 브라우저에 최적화된 번들로 병합하는 프로세스이다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8564e446-7e61-4d94-ac9a-da6d07e782c0/Untitled.png)
+![Webpack_Map](/webpack/webpack_map.png)
 
 ---
 
@@ -134,11 +136,11 @@ require(["math], function(math) {
 
 webpack.config.js
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6125d6fc-027b-4ed4-a480-40a07d47acd4/Untitled.png)
+![entry_code](/webpack/entry_code.png)
 
 development mode
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5320ae94-1980-4fc7-a64f-fc3990a22b20/Untitled.png)
+![entry_terminal](/webpack/entry_terminal.png)
 
 `**--mode`\*\*
 
@@ -148,7 +150,7 @@ development mode
 
 위 명령어를 실행하면 `dist/main.js`에 번들링된 결과가 저장된다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c6167345-97d4-4b63-8f4f-2cd535c6ac63/Untitled.png)
+![entry_folder](/webpack/entry_folder.png)
 
 # 로더
 
@@ -162,15 +164,15 @@ development mode
 
 // 루트 디렉터리에 my-webpack-loaders.js 파일 생성
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/404ea371-f66a-4a03-ba6c-7a0329bbb53f/Untitled.png)
+![custom_loader](/webpack/loader_js_code.png)
 
 // webpack.config.js에 로더 설정
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d4e89397-eb81-4d2e-a430-3a8d283d7b06/Untitled.png)
+![loader_config](/webpack/loader_config.png)
 
 // 빌드
 
-![현재 src 폴더에 js 파일이 2개 있기 때문에, loader가 두번 실행되는것을 볼 수 있다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/6230a369-2d48-484a-998d-a647b21c1944/Untitled.png)
+![현재 src 폴더에 js 파일이 2개 있기 때문에, loader가 두번 실행되는것을 볼 수 있다.](/webpack/loader_terminal.png)
 
 현재 src 폴더에 js 파일이 2개 있기 때문에, loader가 두번 실행되는것을 볼 수 있다.
 
@@ -178,47 +180,47 @@ development mode
 
 ---
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7b7291f3-0aad-4f50-8073-592b7a5411c0/Untitled.png)
+![import_css](/webpack/import_css.png)
 
 아무런 설정도 없이 css모듈을 import 후 빌드를 하려고 하면 웹팩은 에러를 던진다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/3beb84ef-de73-4c1a-af97-41f16844e240/Untitled.png)
+![css_import_error](/webpack/css_import_error.png)
 
 우리가 웹팩에 css 파일을 해석할 수 있도록 설정해주지 않았기 때문에 발생하는 에러이다.
 
 웹팩이 css파일을 이해할 수 있도록 해주려면 `css-loader`를 설정해주면 된다.
 
-![npm install css-loader 로 설치](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/85754058-1952-4e3c-bc2c-2bf1b8432308/Untitled.png)
+![npm install css-loader 로 설치](/webpack/css_loader_depend.png)
 
 npm install css-loader 로 설치
 
-![사용할 로더를 설정해준다. 이 경우 css-loader](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c8d66ec6-b5f1-4ea9-85ec-04b44e30e329/Untitled.png)
+![사용할 로더를 설정해준다. 이 경우 css-loader](/webpack/css_loader_set.png)
 
 사용할 로더를 설정해준다. 이 경우 css-loader
 
 설정 후 다시 빌드 실행을 하면 정상적으로 빌드된 것을 볼 수 있다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9f097d2c-1291-4058-a9ea-eec205a74456/Untitled.png)
+![css_loader_build](/webpack/css_loader_build.png)
 
 // 빌드된 /dist/main.js
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/884ad484-df28-4aa1-9ba8-3445d0e8298a/Untitled.png)
+![builded_css_loader](/webpack/builded_css_loader.png)
 
 하지만 브라우저로 들어가서 css가 제대로 적용 됐는지 확인해보면 적용되지 않았다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/15f79c3e-1de4-4f09-b19e-07bd6f624a6f/Untitled.png)
+![check_css_loader](/webpack/check_css_loader.png)
 
 이는 CSS 코드가 CSSOM 을 생성해야 스타일이 적용되는데 우리는 아직 `js` 파일에만 모듈을 가져왔을 뿐 `index.html` 파일에 style 태그를 삽입하거나 인라인태그로 적용하지 않았기 때문이다.
 
 이런 상황에서 필요한 것이 바로 `style-loader`이다.
 
-![위와 같이 style-loader를 설치하고 use 배열에 추가해준다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/47803c50-216c-4422-afc3-2b845164fdbf/Untitled.png)
+![위와 같이 style-loader를 설치하고 use 배열에 추가해준다.](/webpack/set_style_loader.png)
 
 위와 같이 style-loader를 설치하고 use 배열에 추가해준다.
 
 빌드 후 브라우저를 확인해보면 스타일이 제대로 적용된 것을 볼 수 있다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/88e34060-16df-483d-a224-8ea20b90d30f/Untitled.png)
+![check_style_loader](/webpack/check_style_loader.png)
 
 ## Asset Modules - 추가 내용 & 실습 예정
 
@@ -226,7 +228,7 @@ npm install css-loader 로 설치
 
 webpack5 이전에는 아래와 같이 url을 이용해 이미지를 불러오기 위해서는 file-loader설정이 필요했다.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b7205108-d66f-47c9-86b4-aca59a9bb8fe/Untitled.png)
+![asset_modules](/webpack/asset_modules.png)
 
 webpack5에서는 이러한 로더를 대체하기 위해 `asset module` 에 4개의 새로운 모듈 유형이 추가되었다.
 
@@ -253,13 +255,13 @@ webpack5에서는 이러한 로더를 대체하기 위해 `asset module` 에 4�
 
 // 루트 디렉터리에 my-webpack-plugin.js 파일 생성
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9e7911d4-a3e3-414d-b81a-9c051b95fbf9/Untitled.png)
+![custom_webpack_plugin](/webpack/custom_webpack_plugin.png)
 
-![plugins 배열에 생성자 함수 생성.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/20c31c6a-e4c6-4d5c-ac26-9559b2025d77/Untitled.png)
+![set_custom_plugin](/webpack/set_custom_plugin.png)
 
 plugins 배열에 생성자 함수 생성.
 
-![정상적으로 The webpack build process is starting!이 출력되는것을 확인할 수 있다.](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d1f9f266-f357-4984-8a16-f8d2a1143797/Untitled.png)
+![정상적으로 The webpack build process is starting!이 출력되는것을 확인할 수 있다.](/webpack/build_with_custom_plugin.png)
 
 정상적으로 The webpack build process is starting!이 출력되는것을 확인할 수 있다.
 

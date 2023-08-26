@@ -42,11 +42,11 @@ export default function Page({
 }) {
   return (
     <div className="flex justify-center ">
-      <div className="w-8/12">
+      <div className="w-7/12">
         <Header />
         <Title post={post} />
-        <div className="flex flex-col items-center mt-14">
-          <div className="prose flex flex-col items-center">
+        <div className="flex flex-col mt-12">
+          <div className="prose flex flex-col">
             <MDXRemote {...mdx} />
           </div>
         </div>
