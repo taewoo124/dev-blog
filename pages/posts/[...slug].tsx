@@ -4,7 +4,7 @@ import { serializeMdx } from "@/libs/mdx";
 import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 import { Post } from "@/libs/types";
 import Title from "./components/Title";
-import Header from "../components/header";
+import Header from "../components/Header";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();

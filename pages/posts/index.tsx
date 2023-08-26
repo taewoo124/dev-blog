@@ -1,9 +1,9 @@
 import { getAllPosts } from "@/libs/post";
 import Link from "next/link";
 import { Post } from "@/libs/types";
-import Header from "../components/header";
-import BannerImage from "../components/image";
-import Intro from "../components/intro";
+import Header from "../components/Header";
+import BannerImage from "../components/Image";
+import Intro from "../components/Intro";
 import PostBanner from "../components/PostBanner";
 
 export const getStaticProps = () => {
@@ -28,8 +28,8 @@ export default function PostPage({
       </div>
       <div className="inline-grid gap-4 grid-cols-2 w-8/12 mt-16">
         {posts.map((post, i) => (
-          <Link key={i} href={post.slug}>
-            <PostBanner />
+          <Link key={i} href={post.slug} className="pointer">
+            <PostBanner title={post.title} tags={post.tags} date={post.date} />
           </Link>
         ))}
       </div>
