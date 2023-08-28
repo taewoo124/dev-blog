@@ -2,9 +2,11 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { getAllPosts } from "@/libs/post";
 import { serializeMdx } from "@/libs/mdx";
 import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
-import { Post } from "@/libs/types";
+import { Post, TableOfContents } from "@/libs/types";
 import Title from "./components/Title";
 import Header from "../components/Header";
+import Sidebar from "../components/SideBar";
+import { parseToc } from "@/libs/toc";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();
@@ -29,26 +31,29 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const mdx = await serializeMdx(post.content);
 
   return {
-    props: { mdx, post },
+    props: { mdx, post, tableOfContents: parseToc(post.content) },
   };
 };
 
 export default function Page({
   mdx,
   post,
+  tableOfContents,
 }: {
   mdx: MDXRemoteSerializeResult;
   post: Post;
+  tableOfContents: TableOfContents;
 }) {
   return (
     <div className="flex justify-center ">
       <div className="w-7/12">
         <Header />
         <Title post={post} />
-        <div className="flex flex-col mt-12">
+        <div className="flex  mt-12">
           <div className="prose flex flex-col">
             <MDXRemote {...mdx} />
           </div>
+          <Sidebar tableOfContents={tableOfContents} />
         </div>
       </div>
     </div>

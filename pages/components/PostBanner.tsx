@@ -21,7 +21,7 @@ export default function PostBanner({
           ))}
         </span>
         <span className="flex">
-          <p className="mx-2">{date}</p>
+          <p className="mx-2 p-2">{date}</p>
         </span>
       </div>
     </div>
