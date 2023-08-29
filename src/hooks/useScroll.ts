@@ -27,7 +27,7 @@ export const useScroll = (tableOfContents: TableOfContents) => {
     function onScroll() {
       if (!headings) return;
 
-      const top = window.scrollY + scrollMt + 1;
+      const top = window.scrollY + scrollMt + 100;
       let current: typeof currentSectionSlug = undefined;
 
       for (let i = 0; i < headings.length; i++) {

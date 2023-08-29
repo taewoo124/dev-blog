@@ -3,6 +3,7 @@ import { Fragment } from "react";
 import { useScroll } from "@/src/hooks/useScroll";
 import { Section, SubSection } from "@/libs/types";
 import { $ } from "@/libs/clsx";
+import BannerBottom from "./BannerBottom";
 
 export default function Sidebar({
   tableOfContents,
@@ -90,6 +91,7 @@ export default function Sidebar({
           </ul>
         </div>
       )}
+      <BannerBottom />
     </div>
   );
 }

@@ -4,10 +4,8 @@ export default function HeaderLink({
   children: React.ReactNode;
 }) {
   return (
-    <span>
-      <h1 className="text-2xl text-black flex items-center font-bold mx-4">
-        {children}
-      </h1>
+    <span className="mx-4 flex items-center">
+      <h1>{children}</h1>
     </span>
   );
 }

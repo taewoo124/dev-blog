@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "github:fortawesome/react-fontawesome",
     "@types/node": "20.5.3",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
@@ -25,16 +27,17 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/typography": "^0.5.9",
     "@types/glob": "^8.1.0",
     "autoprefixer": "10.4.15",
+    "clsx": "^2.0.0",
     "glob": "^10.3.3",
     "postcss": "8.4.28",
     "rehype-pretty-code": "^0.10.0",
     "rehype-prism": "^2.2.2",
     "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
-    "clsx": "^2.0.0",
     "shiki": "^0.14.3",
     "tailwind-merge": "^1.14.0"
   }

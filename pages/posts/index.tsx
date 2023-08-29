@@ -1,10 +1,10 @@
 import { getAllPosts } from "@/libs/post";
 import Link from "next/link";
 import { Post } from "@/libs/types";
-import Header from "../components/Header";
-import BannerImage from "../components/Image";
-import Intro from "../components/Intro";
-import PostBanner from "../components/PostBanner";
+import Header from "./components/Header";
+import BannerImage from "./components/Image";
+import Intro from "./components/Intro";
+import PostBanner from "./components/PostBanner";
 
 export const getStaticProps = () => {
   return {
