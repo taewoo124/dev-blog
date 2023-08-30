@@ -49,9 +49,9 @@ Promises/A 제안은 자바스크립트 커뮤니티의 관심과 추가 개발�
 
 - 새로운 `Promise` 객체를 생성한다. 주로 프로미스를 지원하지 않는 함수를 감쌀 때 사용한다.
 
-## [정적 매서드](https://www.notion.so/Static-method-77b91e29729e4203a1a86063a892bab1?pvs=21)
+## 정적 매서드
 
-### `[Promise.all(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)`
+### Promise.all(iterable)
 
 주어진 모든 프로미스가 이행하거나, 한 프로미스가 거부될 때까지 대기하는 새로운 프로미스를 반환한다.
 반환하는 프로미스가 이행한다면, 매개변수로 제공한 프로미스 각각의 이행 값을 모두 모아놓은 배열로 이행한다. 배열 요소의 순서는 매개변수에 지정한 프로미스의 순서를 유지한다.
@@ -106,7 +106,7 @@ foo() // 약 3초 소요
 
 `Promise.all` 은 하나의 프로미스가 실패하면 전체가 실패하는 방식으로 동작하기 때문에, 멱등성이 중요한 상황에서는 사용에 주의해야 한다.
 
-### `[Promise.allSettled(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled)`
+### Promise.allSettled(iterable)
 
 모든 프로미스가 **결정**되었을 때 (이행 또는 거부 되었을 때)이행되는 프로미스를 반환한다.
 
@@ -135,7 +135,7 @@ Promise.allSettled([promise1, promise2, promise3]).then((results) => {
 // 프로미스 3: fulfilled - bar
 ```
 
-### `[Promise.any(iterable)` (en-US)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any)
+### Promise.any(iterable)
 
 이행되는 프로미스 집합에서 첫 번째 프로미스의 결과를 반환하는 데 사용된다. 여러 개의 프로미스를 병렬로 실행하고 싶지만 모든 프로미스의 결과가 필요하지 않을 때 유용할 수 있다.
 
@@ -182,7 +182,7 @@ Promise.any([coffee, tea])
   });
 ```
 
-### `[Promise.race(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)`
+### Promise.race(iterable)
 
 - 주어진 모든 프로미스 중 하나라도 처리될 때까지 대기하는 프로미스를 반환한다.
   반환하는 프로미스가 이행한다면, 매개변수의 프로미스 중 첫 번째로 이행한 프로미스의 값으로 이행한다.
@@ -210,11 +210,11 @@ Promise.race([
   .catch(console.log); // Error: Error 3
 ```
 
-### `[Promise.reject(reason)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/reject)`
+### Promise.reject(reason)
 
 - 주어진 사유로 거부하는 `Promise` 객체를 반환한다.
 
-### `[Promise.resolve()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)`
+### Promise.resolve()
 
 - 주어진 값으로 이행하는 `Promise` 객체를 반환합니다. 이때 지정한 값이 `then` 가능한(`then` 메서드를 가지는) 값인 경우, `Promise.resolve()`가 반환하는 프로미스는 `then` 메서드를 "따라가서" 자신의 최종 상태를 결정한다.
 - 그 외의 경우, 반환된 프로미스는 주어진 값으로 이행한다.
@@ -222,15 +222,15 @@ Promise.race([
 
 ## 인스턴스 매서드
 
-1. `[Promise.prototype.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)`
+1. Promise.prototype.catch()
 
    - 프로미스에 거부 처리기 콜백을 추가하고, 콜백이 호출될 경우 그 반환값으로 이행하며 호출되지 않을 경우, 즉 이전 프로미스가 이행하는 경우 이행한 값을 그대로 사용해 이행하는 새로운 프로미스를 반환한다.
 
-1. `[Promise.prototype.then()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)`
+1. Promise.prototype.then()
 
    - 프로미스에 이행과 거부 처리기 콜백을 추가하고, 콜백이 호출될 경우 그 반환값으로 이행하며 호출되지 않을 경우(`onFulfilled`, `onRejected` 중 상태에 맞는 콜백이 함수가 아닐 경우) 처리된 값과 상태 그대로 처리되는 새로운 프로미스를 반환한다.
 
-1. `[Promise.prototype.finally()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally)`
+1. Promise.prototype.finally()
    - 프로미스의 이행과 거부 여부에 상관없이 처리될 경우 항상 호출되는 처리기 콜백을 추가하고, 이행한 값 그대로 이행하는 새로운 프로미스를 반환한다.
 
 ---

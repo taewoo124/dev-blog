@@ -42,7 +42,7 @@ export default function Header(): React.ReactElement {
               />
             </Link>
           </HeaderLink>
-          <nav className="flex">
+          <nav className="md:flex hidden">
             <HeaderLink>
               <Link target="blank" href="https://www.github.com/taewoo124">
                 <Image

@@ -13,14 +13,14 @@ export default function PostBanner({
         <p className="text-3xl mb-6">{title}</p>
       </div>
       <div className="flex justify-between">
-        <span className="flex">
+        <span className="xl:flex hidden">
           {tags.map((tag, index) => (
             <p className="bg-white p-1 m-1 rounded-xl" key={index}>
               {tag}
             </p>
           ))}
         </span>
-        <span className="flex justify-center items-center">
+        <span className="md:flex hidden justify-center items-center">
           <p className="bg-white rounded-xl mx-2 p-2">{date}</p>
         </span>
       </div>

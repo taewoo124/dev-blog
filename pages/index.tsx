@@ -20,7 +20,7 @@ export default function PostPage({
   posts: Post[];
 }): React.ReactElement {
   return (
-    <div className="flex flex-col items-center">
+    <div className="sm:flex hidden flex-col items-center">
       <div className="w-7/12">
         <Header />
         {/* <BannerImage /> */}

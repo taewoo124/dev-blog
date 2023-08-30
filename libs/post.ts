@@ -8,16 +8,6 @@ import { Post, PostMatter } from "./types";
 const BASE_PATH = "/posts";
 const POSTS_PATH = path.join(process.cwd(), BASE_PATH);
 
-export const getAllPosts = () => {
-  const postPaths: string[] = sync(`${POSTS_PATH}/**/*.mdx`);
-  return postPaths.reduce<Post[]>((acc, postPath) => {
-    const post = parsePost(postPath);
-    if (!post) return acc;
-
-    return [...acc, post];
-  }, []);
-};
-
 const parsePost = (postPath: string): Post | undefined => {
   try {
     const file = fs.readFileSync(postPath, { encoding: "utf-8" });
@@ -37,4 +27,14 @@ const parsePost = (postPath: string): Post | undefined => {
   } catch (error) {
     console.error(error);
   }
+};
+
+export const getAllPosts = () => {
+  const postPaths: string[] = sync(`${POSTS_PATH}/**/*.mdx`);
+  return postPaths.reduce<Post[]>((acc, postPath) => {
+    const post = parsePost(postPath);
+    if (!post) return acc;
+
+    return [...acc, post];
+  }, []);
 };
