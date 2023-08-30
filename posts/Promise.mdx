@@ -1,0 +1,236 @@
+---
+title: Promise
+description: Promise 인터페이스
+date: 2023-07-25
+tags:
+  - Javscript
+  - 비동기
+---
+
+# Promise란 무엇인가
+
+[You are Missing the Point of Promise](https://www.notion.so/You-are-Missing-the-Point-of-Promise-5b85b519c780425daf3a3b80bb430422?pvs=21)
+
+## Promise의 탄생 배경
+
+자바스크립트 프로미스의 기원은 비동기 연산을 처리하기 위한 표준화되고 보다 직관적인 방법이 필요했던 데서 찾을 수 있다. 프로미스가 도입되기 전에는 개발자들이 비동기 코드 실행을 관리하기 위해 콜백에 의존하는 것이 일반적이었다. 그러나 콜백으로 작업하면 중첩되고 복잡한 콜백 구조로 인해 코드를 읽고, 이해하고, 유지 관리하기 어려운 '**콜백 지옥**'에 빠지는 경우가 많았다.
+
+이러한 문제를 해결하기 위해 자바스크립트에 프로미스가 도입되었다. 프로미스 개념은 프로그래밍 언어 커뮤니티에서 시작되었으며 커먼 리스프의 퓨처, jQuery의 디퍼드, [Promises/A 사양](https://promisesaplus.com/)과 같은 다른 언어의 유사한 개념의 영향을 받았다.
+
+자바스크립트에서 Promises에 대한 최초의 공식 사양은 **Kris Kowal**이 작성하여 2010년에 발표한 Promises/A 제안이었다. Promises/A는 자바스크립트 프로미스의 토대를 마련하고 프로미스의 동작과 API에 대한 표준을 정립했다. 이 제안은 기본 Promise 인터페이스를 도입하고, Resolve Promise, Rejected Promise, then()을 사용한 비동기 연산 연쇄의 개념을 포함하여 Promise가 어떻게 사용되어야 하는지를 명시했다.
+
+Promises/A 제안은 자바스크립트 커뮤니티의 관심과 추가 개발을 촉발시켰고, 자바스크립트에서 네이티브 프로미스 지원이 도입되는 결과로 이어졌다. Promises는 2015년 6월에 릴리스된 ECMAScript 6(ES2015) 사양에 공식적으로 추가되었다. JavaScript에 기본 제공 기능으로 프로미스가 도입되면서 개발자는 비동기 연산을 보다 체계적이고 관리하기 쉬운 방식으로 처리할 수 있게 되었다.
+
+자바스크립트의 기본 프로미스 구현은 프로미스 작업을 위한 표준화된 구문과 메서드 세트(then(), catch(), finally() 등)를 제공했다. 이를 통해 개발자는 보다 직관적이고 가독성 높은 접근 방식을 사용하여 비동기 코드를 처리할 수 있었으며, 콜백의 깊은 중첩을 피하고 오류 처리 및 흐름 제어를 개선할 수 있었다.
+
+네이티브 프로미스가 도입된 후, 자바스크립트 프레임워크와 라이브러리는 비동기 연산을 처리하는 데 선호되는 메커니즘으로 프로미스를 채택했다. 이후 JavaScript 버전에 도입된 [async/await](https://www.notion.so/Async-Await-26bc51b5bc214812979e3b60ea293573?pvs=21)과 같은 고급 비동기 패턴의 기반이 된 것이 바로 프로미스이다.
+
+## 정의
+
+“`Promise`는 프로미스가 생성된 시점에는 알려지지 않았을 수도 있는 값을 위한 **대리자**”
+
+- 자바스크립트에서 프로미스는 비동기 작업의 최종 완료(또는 실패)와 그 결과 값을 나타내는 객체이다. 서버에서 데이터 가져오기, 파일 읽기 또는 API 호출과 같은 비동기 작업을 처리하는 데 사용된다.
+- 이 정의의 핵심 개념은 프로미스가 생성될 때 **즉시 사용할 수 없는 값**을 나타낸다는 것이다. 비동기 작업은 완료하는 데 시간이 걸리는 경우가 많으며 실행 시점에 결과를 즉시 사용할 수 없기 때문이다.
+- 실행을 차단하고 비동기 작업이 완료될 때까지 기다리는 대신, 프로미스를 사용하면 다른 작업이나 코드 실행을 계속할 수 있다. 프로미스는 비동기 연산에 의해 해결되거나 거부될 미래 값에 대한 자리 표시자 또는 프록시 역할을 한다.
+
+## Promise의 3가지 상태
+
+- 대기(_pending)_: 이행하지도, 거부하지도 않은 초기 상태.
+  - 대기 중인 프로미스는 값과 함께 이행할 수도, 어떤 이유(오류)로 인해 거부될 수도 있다.
+- **이행(fulfillment)**: Promise가 성공적으로 완료되어 결과 값을 가지게 되는 상태.
+- **거부(rejection)**: Promise가 어떤 이유로 인해 완료되지 못하고 오류를 가지게 되는 상태.
+  - 이행이나 거부될 때, 프로미스의 `then` 메서드에 의해 대기열(큐)에 추가된 처리기들이 호출된다. 이미 이행했거나 거부된 프로미스에 처리기를 연결해도 호출되므로, 비동기 연산과 처리기 연결 사이에 경합 조건은 없다.
+
+![promises.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/de54aedd-c5d6-494f-97eb-1d7e816e0212/promises.png)
+
+## 생성자
+
+`[Promise()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise)`
+
+- 새로운 `Promise` 객체를 생성한다. 주로 프로미스를 지원하지 않는 함수를 감쌀 때 사용한다.
+
+## [정적 매서드](https://www.notion.so/Static-method-77b91e29729e4203a1a86063a892bab1?pvs=21)
+
+### `[Promise.all(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)`
+
+주어진 모든 프로미스가 이행하거나, 한 프로미스가 거부될 때까지 대기하는 새로운 프로미스를 반환한다.
+반환하는 프로미스가 이행한다면, 매개변수로 제공한 프로미스 각각의 이행 값을 모두 모아놓은 배열로 이행한다. 배열 요소의 순서는 매개변수에 지정한 프로미스의 순서를 유지한다.
+반환하는 프로미스가 거부된다면, 매개변수의 프로미스 중 거부된 첫 프로미스의 사유를 그대로 사용한다.
+
+```jsx
+async function foo() {
+  const a = await new Promise(resolve => setTimeout() => resolve(1), 3000);
+  const b = await new Promise(resolve => setTimeout() => resolve(2), 2000);
+  const c = await new Promise(resolve => setTimeout() => resolve(3), 1000);
+
+  console.log([a, b, c]); // [1, 2, 3]
+}
+
+foo(); // 약 6초 소요
+```
+
+```jsx
+async function foo() {
+  const res = await Promise.all([
+    const a = await new Promise(resolve => setTimeout() => resolve(1), 3000);
+    const b = await new Promise(resolve => setTimeout() => resolve(2), 2000);
+    const c = await new Promise(resolve => setTimeout() => resolve(3), 1000);
+]);
+
+  console.log(res); // [1, 2, 3]
+}
+
+foo() // 약 3초 소요
+```
+
+**`Promise.all()`**을 사용하는 주된 이유는 여러 비동기 작업들이 모두 완료될 때까지 기다려야 할 경우이다.
+
+**`Promise.all()`**은 전달된 모든 프로미스가 이행(fulfill)될 때까지 기다리며, 이 모든 프로미스들이 이행되면 그 결과를 배열로 반환한다.
+
+즉, **`Promise.all()`**은 다음과 같은 상황에서 유용하게 사용될 수 있다
+
+1. **병렬 처리**: 여러 비동기 작업을 병렬로 처리하고, 그 모든 작업이 완료되면 결과를 수집하려는 경우. 이는 서버에서 여러 리소스를 동시에 요청하고 모든 요청이 완료될 때까지 기다릴 때 유용하다.
+
+1. **종속성 관리**: 비동기 작업이 서로 종속되어 있는 경우. 예를 들어, 여러 API 호출이 있고, 각 호출의 결과가 다음 호출의 입력으로 사용되는 경우, **`Promise.all()`**을 사용하면 이러한 종속성을 관리할 수 있다.
+
+1. **에러 핸들링**: **`Promise.all()`**은 전달된 프로미스 중 하나라도 reject 되면 즉시 에러를 반환한다. 이로 인해 여러 비동기 작업을 처리하면서 발생할 수 있는 에러를 한곳에서 캐치하여 처리할 수 있습니다.
+
+다만, **`Promise.all()`**이 모든 프로미스가 이행되기를 기다리는 특성 때문에, 모든 프로미스가 이행되지 않고 하나라도 거부되면 에러를 반환하고 나머지 프로미스들의 결과는 무시된다는 점을 유념해야 한다.
+
+이 경우에는 **`Promise.allSettled()`**와 같은 다른 메서드를 사용하는 것이 더 적합할 수 있다.
+
+주어진 모든 프로미스가 처리(이행 또는 거부)될 때까지 대기하는 새로운 프로미스를 반환한다.
+`Promise.allSettled()`가 반환하는 프로미스는 매개변수로 제공한 모든 프로미스 각각의 상태와 값(또는 거부 사유)을 모아놓은 배열로 이행한다.
+
+**_주의할 점_**
+
+`Promise.all` 은 하나의 프로미스가 실패하면 전체가 실패하는 방식으로 동작하기 때문에, 멱등성이 중요한 상황에서는 사용에 주의해야 한다.
+
+### `[Promise.allSettled(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled)`
+
+모든 프로미스가 **결정**되었을 때 (이행 또는 거부 되었을 때)이행되는 프로미스를 반환한다.
+
+각 프로미스의 결과를 가진 배열을 반환하며, 각 결과는 이행 또는 거부된 상태와 그에 해당하는 값 또는 이유를 나태내는 객체이다.
+
+- 응답이 성공할 경우 – `{status:"fulfilled", value:result}`
+- 에러가 발생한 경우 – `{status:"rejected", reason:error}`
+
+```jsx
+let promise1 = Promise.resolve(3);
+let promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, "foo"));
+let promise3 = Promise.resolve("bar");
+
+Promise.allSettled([promise1, promise2, promise3]).then((results) => {
+  results.forEach((result, index) => {
+    console.log(
+      `프로미스 ${index + 1}: ${result.status} - ${
+        result.value || result.reason
+      }`
+    );
+  });
+});
+
+// 프로미스 1: fulfilled - 3
+// 프로미스 2: rejected - foo
+// 프로미스 3: fulfilled - bar
+```
+
+### `[Promise.any(iterable)` (en-US)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any)
+
+이행되는 프로미스 집합에서 첫 번째 프로미스의 결과를 반환하는 데 사용된다. 여러 개의 프로미스를 병렬로 실행하고 싶지만 모든 프로미스의 결과가 필요하지 않을 때 유용할 수 있다.
+
+**_주의사항_**
+
+1. 항상 이행할 첫 번째 결과를 반환하기 때문에 기대하는 값을 반환하지 않을 수 있다.
+2. 어떤 프로미스도 이행되지 않으면 전체 집합을 거부하여 코드가 실패할 수 있다.
+
+이러한 문제를 해결하기 위해 첫 번째 프로미스가 이행되는 결과만 반환하고 모든 프로밋가 거브되면 거부하는 `Promise.race()` 메서드를 사용할 수 있다.
+
+**_Return Value_**
+
+`Promise`
+
+**_예시_**
+
+로드된 첫 번째 이미지 표시
+
+```jsx
+async function fetchAndDecode(url, description) {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  const data = await response.blob();
+
+  return [data, description];
+}
+
+const coffee = fetchAndDecode("coffee.jpg", "Coffee");
+const tea = fetchAndDecode("tea.jpg", "Tea");
+
+Promise.any([coffee, tea])
+  .then(([blob, description]) => {
+    const objectURL = URL.createObjectURL(blob);
+    const image = document.createElement("img");
+    image.src = objectURL;
+    image.alt = description;
+    document.body.appendChild(image);
+  })
+  .catch((e) => {
+    console.error(e);
+  });
+```
+
+### `[Promise.race(iterable)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)`
+
+- 주어진 모든 프로미스 중 하나라도 처리될 때까지 대기하는 프로미스를 반환한다.
+  반환하는 프로미스가 이행한다면, 매개변수의 프로미스 중 첫 번째로 이행한 프로미스의 값으로 이행한다.
+  반환하는 프로미스가 거부된다면, 매개변수의 프로미스 중 거부된 첫 프로미스의 사유를 그대로 사용한다.
+
+```jsx
+Promise.race([
+  new Promise((resolve) => setTimeout(() => resolve(1), 3000)), // 1
+  new Promise((resolve) => setTimeout(() => resolve(2), 2000)), // 2
+  new Promise((resolve) => setTimeout(() => resolve(3), 1000)), // 3
+])
+  .then(console.log) // 3
+  .catch(console.log);
+```
+
+- 프로미스가 `rejected` 상태가 되면 `Promise.all` 매서드와 동일하게 처리된다. 즉, `Promise.race` 매서드에 전달된 프로미스가 하나라도 `rejected` 상태가 되면 에러를 reject하는 새로운 프로미스를 즉시 반환한다.
+
+```jsx
+Promise.race([
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 1"), 3000)),
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 2"), 2000)),
+  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 3"), 1000))
+])
+  .then(console.log)
+  .catch(console.log); // Error: Error 3
+```
+
+### `[Promise.reject(reason)](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/reject)`
+
+- 주어진 사유로 거부하는 `Promise` 객체를 반환한다.
+
+### `[Promise.resolve()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/resolve)`
+
+- 주어진 값으로 이행하는 `Promise` 객체를 반환합니다. 이때 지정한 값이 `then` 가능한(`then` 메서드를 가지는) 값인 경우, `Promise.resolve()`가 반환하는 프로미스는 `then` 메서드를 "따라가서" 자신의 최종 상태를 결정한다.
+- 그 외의 경우, 반환된 프로미스는 주어진 값으로 이행한다.
+  어떤 값이 프로미스인지 아닌지 알 수 없는 경우, 보통 일일히 두 경우를 나눠서 처리하는 대신 `Promise.resolve()`로 값을 감싸서 항상 프로미스가 되도록 만든 후 작업하는 것이 좋다.
+
+## 인스턴스 매서드
+
+1. `[Promise.prototype.catch()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/catch)`
+
+   - 프로미스에 거부 처리기 콜백을 추가하고, 콜백이 호출될 경우 그 반환값으로 이행하며 호출되지 않을 경우, 즉 이전 프로미스가 이행하는 경우 이행한 값을 그대로 사용해 이행하는 새로운 프로미스를 반환한다.
+
+1. `[Promise.prototype.then()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)`
+
+   - 프로미스에 이행과 거부 처리기 콜백을 추가하고, 콜백이 호출될 경우 그 반환값으로 이행하며 호출되지 않을 경우(`onFulfilled`, `onRejected` 중 상태에 맞는 콜백이 함수가 아닐 경우) 처리된 값과 상태 그대로 처리되는 새로운 프로미스를 반환한다.
+
+1. `[Promise.prototype.finally()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally)`
+   - 프로미스의 이행과 거부 여부에 상관없이 처리될 경우 항상 호출되는 처리기 콜백을 추가하고, 이행한 값 그대로 이행하는 새로운 프로미스를 반환한다.
+
+---

@@ -28,3 +28,10 @@ body {
 body::-webkit-scrollbar {
   display: none;
 }
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/font/Pretendard-Medium.subset.woff2");
+  font-weight: 400;
+  font-style: normal;
+}

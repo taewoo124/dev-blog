@@ -27,13 +27,13 @@ export default function Header(): React.ReactElement {
   return (
     <div className="sticky top-0 z-50">
       <header
-        className={`transition-all duration-300 bg-white border-b-2 border-gray px-4 ${
+        className={`transition-all duration-300 bg-light-white border-b-2 border-gray px-4 ${
           isScrolled ? "py-2" : "py-6"
         }`}
       >
         <div className="flex flex-wrap justify-between items-center">
           <HeaderLink>
-            <Link href="/posts">
+            <Link href="/">
               <Image
                 src="/Light-Bulb-PNG-Clipart.png"
                 alt="Log_Image"
@@ -42,7 +42,6 @@ export default function Header(): React.ReactElement {
               />
             </Link>
           </HeaderLink>
-
           <nav className="flex">
             <HeaderLink>
               <Link target="blank" href="https://www.github.com/taewoo124">

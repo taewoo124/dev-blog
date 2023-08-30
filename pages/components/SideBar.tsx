@@ -28,12 +28,12 @@ export default function Sidebar({
   return (
     <div
       className={$(
-        "overflow-hidden h-full sticky top-80 ml-12 rounded-xl border border-neutral-200 transition-all dark:border-neutral-800",
+        "overflow-hidden w-3/4  h-fit sticky top-80 ml-12 rounded-xl border border-neutral-200 transition-all dark:border-neutral-800",
         className
       )}
     >
       {tableOfContents.length !== 0 && (
-        <div className="p-4 pr-2 dark:border-neutral-700 dark:bg-neutral-800">
+        <div className="p-4 pl-7 dark:border-neutral-700 dark:bg-neutral-800">
           <ul
             id="toc-content"
             className="mt-2 flex flex-col items-start justify-start text-sm"

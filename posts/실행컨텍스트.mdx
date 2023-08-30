@@ -1,0 +1,343 @@
+---
+title: 실행 컨텍스트
+description: 실행 컨텍스트 개념 정리
+date: 2023-07-25
+tags:
+  - Javscript
+---
+
+# 정의
+
+실행 컨텍스트는 코드가 실행되기 위한 여러 가지 정보를 담고 있는 환경을 의미한다. 이 환경에는 변수, 함수 호출 스택, this 바인딩 정보 등이 포함된다. 코드의 실행 흐름에 따라 여러 개의 실행 컨텍스트가 쌓이게 되며, 이를 **실행 컨텍스트 스택**이라 부른다. 스택의 맨 위에 위치하는 실행 컨텍스트는 현재 활성화된 상태이며, 해당 컨텍스트에서 코드가 실행된다.
+
+# 실행 컨텍스트의 세 가지 유형
+
+### 1. 전역 실행 컨텍스트
+
+기본 또는 기본 실행 컨텍스트이다. 함수 내부에 있지 않은 코드는 전역 실행 컨텍스트에 있다.
+
+이 컨텍스트는 두 가지 작업을 수행한다.
+
+1. `window` 객체(브라우저의 경우)인 전역 객체를 생성하고 이 객체의 값을 전역 객체와 동일하게 설정합니다.
+
+2. 프로그램에는 전역 실행 컨텍스트가 하나만 있을 수 있다.
+
+### 2. 함수 실행 컨텍스트
+
+**함수가 호출될 때마다** 해당 **함수에 대한 새로운 실행 컨텍스트가 생성**된다. 각 함수에는 고유한 실행 컨텍스트가 있지만 함수가 호출되거나 호출될 때 생성된다. 함수 실행 컨텍스트는 얼마든지 있을 수 있다. 새 실행 컨텍스트가 생성될 때마다 정의된 순서대로 일련의 단계를 거치게 된다.
+
+### 3. `eval` 실행 컨텍스트
+
+`eval`에서 실행되는 코드에도 자체 실행 컨텍스트가 있지만, 자바스크립트 개발자는 일반적으로 `eval` 을 사용하지 않으므로 여기서는 설명하지 않겠다.
+
+---
+
+# Call Stack
+
+코드 실행 중에 생성된 모든 실행 컨텍스트를 저장하는 데 사용되는 LIFO(Last in, First out) 구조의 스택이다.
+
+자바스크립트 엔진은 스크립트를 처음 접하면 전역 실행 컨텍스트를 생성하고 이를 현재 실행 스택으로 푸시한다.엔진은 함수 호출을 발견할 때마다 해당 함수에 대한 실행 컨텍스트를 새로 생성하여 스택의 맨 위에 푸시한다.
+
+엔진은 실행 컨텍스트가 스택의 맨 위에 있는 함수를 실행한다. 이 함수가 완료되면 해당 실행 스택이 스택에서 튀어나오고 컨트롤은 현재 스택에서 그 아래 컨텍스트에 도달한다.
+
+```jsx
+let a = "Hello World!";
+function first() {
+  console.log("Inside first function");
+  second();
+  console.log("Again inside first function");
+}
+function second() {
+  console.log("Inside second function");
+}
+first();
+console.log("Inside Global Execution Context");
+```
+
+![Untitled](/callstack.png)
+
+1. 위 코드가 브라우저에 로드되면 자바스크립트 엔진은 전역 실행 컨텍스트를 생성하고 이를 현재 실행 스택으로 푸시한다.
+2. first() 호출이 발생하면 자바스크립트 엔진은 해당 함수에 대한 새 실행 컨텍스트를 생성하고 현재 실행 스택의 맨 위로 푸시한다.
+3. 첫 번째() 함수 내에서 두 번째() 함수가 호출되면 자바스크립트 엔진은 해당 함수에 대한 새 실행 컨텍스트를 생성하고 현재 실행 스택의 맨 위로 푸시한다.
+4. second() 함수가 완료되면 해당 실행 컨텍스트가 현재 스택에서 팝오프되고 제어는 그 아래 실행 컨텍스트, 즉 first() 함수 실행 컨텍스트에 도달한다.
+5. first()가 완료되면 해당 실행 스택이 스택에서 제거되고 제어가 전역 실행 컨텍스트에 도달한다.
+6. 모든 코드가 실행되면 자바스크립트 엔진은 현재 스택에서 전역 실행 컨텍스트를 제거한다.
+
+---
+
+# 실행 컨텍스트는 어떻게 생성될까?
+
+## 1. \***\*The Creation Phase\*\***
+
+실행 컨텍스트는 \***\*Creation Phase\*\***에서 생성된다. 생성 단계에서는 다음과 같은 일이 발생한다.
+
+1. LexicalEnvironment 컴포넌트가 생성된다.
+2. VariableEnvironment 컴포넌트가 생성된다.
+
+따라서 실행 컨텍스트는 개념적으로 다음과 같이 표현할 수 있다.
+
+```jsx
+ExecutionContext = {
+  LexicalEnvironment = <ref. to LexicalEnvironment in memory>,
+  VariableEnvironment = <ref. to VariableEnvironment in  memory>,
+}
+```
+
+### **Lexical Environment**
+
+공식 ES6 문서에서는 **Lexical Environment**을 다음과 같이 정의한다.
+
+> 렉시컬 환경은 ECMAScript 코드의 어휘 중첩 구조를 기반으로 특정 변수 및 함수에 대한 식별자 연결을 정의하는 데 사용되는 유형입니다. **Lexical Environment는** 환경 레코드와 **Outer Lexical Environment**에 대한 `null` 참조로 구성된다.
+
+간단히 말해, **Lexical Environment**은 식별자-변수 매핑을 보유하는 구조이다. (여기서 식별자는 변수/함수의 이름을 의미하며, 변수는 실제 객체[함수 객체 및 배열 객체 포함] 또는 프리미티브 값에 대한 참조이다).
+
+```jsx
+var a = 20;
+var b = 40;
+function foo() {
+  console.log("bar");
+}
+```
+
+따라서 위 스니펫의 Lexical Environment은 다음과 같다
+
+```jsx
+lexicalEnvironment = {
+  a: 20,
+  b: 40,
+  foo: <ref. to foo function>
+}
+```
+
+각 Lexical Environment에는 세 가지 구성 요소가 있다.
+
+1. \***\*Environment Record\*\***
+2. **외부 환경에 대한 참조**
+3. **this 바인딩**
+
+4. \***\*Environment Record\*\***
+
+\***\*Environment Record\*\***는 **Lexical Environment** 내에서 변수 및 함수 선언이 저장되는 곳이다.
+
+\***\*Environment Record\*\***에는 두 가지 유형이 있다.
+
+1. **Declarative environment record**
+
+이름에서 알 수 있듯이 **변수 및 함수 선언을 저장한**다. 함수 코드의 Lexical Environment에는 Declarative environment record가 포함되어 있다.
+
+1. **Object environment record**
+
+전역 코드의 Lexical Environment 에는 Object environment record가 포함 된다. 변수 및 함수 선언 외에도 Object environment record에는 전역 바인딩 객체(브라우저의 창 객체)도 저장된다. 따라서 바인딩 객체의 각 속성(브라우저의 경우 브라우저가 창 객체에 제공하는 속성 및 메서드 포함)에 대해 레코드에 새 항목이 생성된다.
+
+참고 - 함수 코드의 경우, 환경 레코드에는 함수에 전달된 인덱스와 인수 간의 매핑과 함수에 전달된 인수의 길이(숫자)를 포함하는 인수 객체도 포함된다.
+
+예를 들어 아래 함수에 대한 인수 객체는 다음과 같다.
+
+```jsx
+function foo(a, b) {
+  var c = a + b;
+}
+foo(2, 3);
+// argument object
+Arguments: {0: 2, 1: 3, length: 2},
+```
+
+1. \***\*Reference to the Outer Environment\*\***
+
+Reference to the Outer Environment는 Outer Lexical Environment에 액세스할 수 있음을 의미한다. 즉, 자바스크립트 엔진은 현재 Lexical Environment에서 변수를 찾을 수 없는 경우 외부 환경 내부에서 변수를 찾을 수 있다.
+
+1. **This Binding**
+
+이 `Component`에서는 `this` 값이 결정되거나 설정된다.
+
+전역 실행 컨텍스트에서 `this` 값은 전역 객체를 참조한다. (브라우저에서는 창 객체를 참조한다).
+
+함수 실행 컨텍스트에서 `this` 값은 함수가 호출되는 방식에 따라 달라진다. 객체 참조로 호출되는 경우 `this` 값은 해당 객체로 설정되고, 그렇지 않은 경우 `this` 값은 전역 객체 또는 정의되지 않음(엄격 모드에서)으로 설정된다.
+
+예를 들어,
+
+```jsx
+const person = {
+  name: "peter",
+  birthYear: 1994,
+  calcAge: function () {
+    console.log(2018 - this.birthYear);
+  },
+};
+person.calcAge();
+// 'calcAge'가 'person' 객체 참조로 호출되었으므로 'this'는 'person'을 참조한다.
+
+const calculateAge = person.calcAge;
+calculateAge();
+// 객체 참조가 제공되지 않았으므로 'this'는 전역 창 객체를 참조합니다.
+```
+
+추상적으로 Lexical Environment의 의사 코드는 다음과 같다.
+
+```jsx
+GlobalExectionContext = {
+  LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Object",
+      // Identifier bindings go here
+    }
+    outer: <null>,
+    this: <global object>
+  }
+}
+FunctionExectionContext = {
+  LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Declarative",
+      // Identifier bindings go here
+    }
+    outer: <Global or outer function environment reference>,
+    this: <depends on how function is called>
+  }
+}
+```
+
+---
+
+### \***\*Variable Environment\*\***
+
+또한 이 실행 컨텍스트 내에서 변수문에서 생성된 바인딩을 **Environment Record**에 보관하는 Lexical 환경이기도 합니다.
+
+위에서 설명한 것처럼 \***\*Variable Environment\*\***도 **Lexical Environment**이므로 위에서 정의한 대로 어휘 환경의 모든 속성과 구성 요소를 갖는다.
+
+ES6에서 **Lexical Environment** 컴포넌트와 \***\*Variable Environment\*\*** 컴포넌트의 한 가지 차이점은 전자는 함수 선언과 변수(let 및 const) 바인딩을 저장하는 데 사용되는 반면, 후자는 변수(var) 바인딩만 저장하는 데 사용된다는 점이다.
+
+---
+
+## 2. \***\*Execution Phase\*\***
+
+이 단계에서는 모든 변수에 대한 할당이 완료되고 코드가 최종적으로 실행된다.
+
+```jsx
+let a = 20;
+const b = 30;
+var c;
+function multiply(e, f) {
+  var g = 20;
+  return e * f * g;
+}
+c = multiply(20, 30);
+```
+
+위의 코드가 실행되면 자바스크립트 엔진은 전역 코드를 실행하기 위해 전역 실행 컨텍스트를 생성한. 따라서 생성 단계에서 글로벌 실행 컨텍스트는 다음과 같은 모양이 된다
+
+```jsx
+GlobalExectionContext = {
+  LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Object",
+      // Identifier bindings go here
+      a: < uninitialized >,
+      b: < uninitialized >,
+      multiply: < func >
+    }
+    outer: <null>,
+    ThisBinding: <Global Object>
+  },
+  VariableEnvironment: {
+    EnvironmentRecord: {
+      Type: "Object",
+      // Identifier bindings go here
+      c: undefined,
+    }
+    outer: <null>,
+    ThisBinding: <Global Object>
+  }
+}
+```
+
+실행 단계에서 변수 할당이 완료된다. 따라서 실행 단계에서 글로벌 실행 컨텍스트는 다음과 같이 표시된다.
+
+```jsx
+GlobalExectionContext = {
+LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Object",
+      // Identifier bindings go here
+      a: 20,
+      b: 30,
+      multiply: < func >
+    }
+    outer: <null>,
+    ThisBinding: <Global Object>
+  },
+VariableEnvironment: {
+    EnvironmentRecord: {
+      Type: "Object",
+      // Identifier bindings go here
+      c: undefined,
+    }
+    outer: <null>,
+    ThisBinding: <Global Object>
+  }
+}
+```
+
+함수 `multiply(20, 30)`에 대한 호출이 발생하면 함수 코드를 실행하기 위한 새로운 함수 실행 컨텍스트가 생성된다. 따라서 함수 실행 컨텍스트는 생성 단계에서 다음과 같은 모양이 된다.
+
+```jsx
+FunctionExectionContext = {
+LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Declarative",
+      // Identifier bindings go here
+      Arguments: {0: 20, 1: 30, length: 2},
+    },
+    outer: <GlobalLexicalEnvironment>,
+    ThisBinding: <Global Object or undefined>,
+  },
+VariableEnvironment: {
+    EnvironmentRecord: {
+      Type: "Declarative",
+      // Identifier bindings go here
+      g: undefined
+    },
+    outer: <GlobalLexicalEnvironment>,
+    ThisBinding: <Global Object or undefined>
+  }
+}
+```
+
+그 후 실행 컨텍스트는 실행 단계를 거치게 되는데, 이는 함수 내부의 변수에 대한 할당이 수행됨을 의미한다. 따라서 실행 단계에서 함수 실행 컨텍스트는 다음과 같은 모양이 된다.
+
+```jsx
+FunctionExectionContext = {
+LexicalEnvironment: {
+    EnvironmentRecord: {
+      Type: "Declarative",
+      // Identifier bindings go here
+      Arguments: {0: 20, 1: 30, length: 2},
+    },
+    outer: <GlobalLexicalEnvironment>,
+    ThisBinding: <Global Object or undefined>,
+  },
+VariableEnvironment: {
+    EnvironmentRecord: {
+      Type: "Declarative",
+      // Identifier bindings go here
+      g: 20
+    },
+    outer: <GlobalLexicalEnvironment>,
+    ThisBinding: <Global Object or undefined>
+  }
+}
+```
+
+함수가 완료된 후 반환된 값은 c 내부에 저장되므로 Global Lexical Environment가 업데이트된다. 그 후 글로벌 코드가 완료되고 프로그램이 완료된다.
+
+**_NOTE_** - 생성 단계에서 let 및 const 정의 변수에 연결된 값이 없는 것을 눈치챘겠지만, var 정의 변수는 정의되지 않은 것으로 설정되어 있다.
+
+이는 생성 단계에서 코드에서 변수 및 함수 선언을 검사하는 동안 함수 선언은 환경에 전체가 저장되는 반면, 변수는 처음에 `undefined`로 설정되거나(var의 경우) 초기화되지 않은 상태로 남아 있기 때문이다(let 및 const의 경우).
+
+이것이 바로 선언되기 전에 정의된 변수(정의되지 않았지만)에 접근할 수 있지만 선언되기 전에 let 및 const 변수에 접근할 때 참조 오류가 발생하는 이유다.
+
+이를 **_호이스팅_**이라고 한다.
+
+**_NOTE_** - 기존의 **`var`** 키워드는 변수 호이스팅이라는 개념 때문에 변수 선언 이전에 참조하면 **`undefined`**를 반환하지만, **`let`**과 **`const`**는 이러한 호이스팅 행동이 발생하지 않는다. 이 변수들은 선언 전에는 TDZ에 있어 접근이 불가능하며, 선언이 이루어진 후에야 실제 값을 할당하거나 접근할 수 있다.
+
+---

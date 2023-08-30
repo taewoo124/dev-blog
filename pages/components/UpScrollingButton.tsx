@@ -11,7 +11,7 @@ export default function UpScrollingButton(): React.ReactNode {
 
   return (
     <div
-      className="flex justify-center items-center border border-neutrall-200 rounded-md cursor-pointer w-12 h-12 "
+      className="flex justify-center items-center border border-neutrall-200 rounded-md cursor-pointer w-12 h-12 bg-light-white hover:border-blue hover:text-blue"
       onClick={scrollTop}
     >
       <FontAwesomeIcon icon={faChevronUp} />

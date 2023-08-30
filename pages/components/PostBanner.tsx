@@ -8,20 +8,20 @@ export default function PostBanner({
   date: string;
 }): React.ReactElement {
   return (
-    <div className="flex flex-col p-6 border-2 mb-8 rounded-xl border-gray rounded-1xl">
+    <div className="flex flex-col p-6 border-2 mb-8 rounded-xl border-white hover:border-navy hover:text-navy rounded-1xl">
       <div>
         <p className="text-3xl mb-6">{title}</p>
       </div>
       <div className="flex justify-between">
         <span className="flex">
           {tags.map((tag, index) => (
-            <p className="p-2" key={index}>
+            <p className="bg-white p-1 m-1 rounded-xl" key={index}>
               {tag}
             </p>
           ))}
         </span>
-        <span className="flex">
-          <p className="mx-2 p-2">{date}</p>
+        <span className="flex justify-center items-center">
+          <p className="bg-white rounded-xl mx-2 p-2">{date}</p>
         </span>
       </div>
     </div>

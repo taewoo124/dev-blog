@@ -1,0 +1,280 @@
+---
+title: "Closure"
+date: "2023-08-20"
+tags:
+  - Javascript
+---
+
+# 정의
+
+---
+
+MDN에서는 클로저를 한 문장으로 이렇게 설명하고 있다.
+
+> **_“클로저는 함수와 함수가 선언된 어휘적 환경의 조합이다.”_**
+
+또한 클로저를 이해하기 위해서는 자바스크립트가 어떻게 변수의 유효범위를 지정 하는지를 먼저 이해해야 한다고 덧붙인다.
+
+그렇다면 이를 먼저 알아보자
+
+## Lexical scoping
+
+---
+
+Lexical scoping(정적 스코핑)은 프로그램의 소스 코드에만 의존하여 변수의 스코프를 결정하는 방식을 의미한다. 간단히 말해 Lexical scoping는 변수나 함수가 소스 코드에서 **정의된 위치를 기준**으로 한 변수나 함수의 범위이다.
+
+이는 실행 중 변수가 어떻게 사용되는지에 기반을 둔 dynamic scoping과는 대조되는 방식이다.
+
+```tsx
+function outerFunction() {
+  var outerVar = "외부 변수 입니다.";
+
+  function innerFunction() {
+    console.log(outerVar); // "외부 변수 입니다."
+  }
+
+  innerFunction();
+}
+
+outerFunction();
+```
+
+위의 예제에서 `innerFunction` 내부에서 외부 변수에 접근할 수 있는것을 확인할 수 있다. `innerFunction` 은 **선언될 때의 환경을 기억**하기 때문에, 상위 스코프의 변수에 접근할 수 있다. 이러한 스코프 체인은 코드가 작성될 때 결정되며, 어디에서 함수가 호출되는지와는 무관하다.
+
+ES6(ECMAScript 2015) 에서 도입된 `let` 과 `const` 는 `var` 와는 달리 블록레벨 스코프를 가지며,
+선언된 위치에 따라 함수 레벨 스코프, 전역 스코프를 가지는 `var` 의 문제점을 해결한다.
+
+`let` 과 `const` 의 도입으로 인해 ES6부터 블록은 스코프로 취급되기 시작됐다. 클로저는 이 모든 스코프의 변수를 캡처할 수 있다.
+
+## Lexical environment
+
+---
+
+> **_“클로저는 함수와 함수가 선언된 어휘적 환경의 조합이다.”_**
+
+위에서 MDN은 클로저에 대해 이렇게 정의하고 있다고 했다. 그렇다면 Lexical environment란 무엇일까?
+
+이를 이해하기 위해서는 실행 컨텍스트에 대한 이해가 필요하다.
+
+실행 컨텍스트는 코드가 실행되기 위한 여러 가지 정보를 담고 있는 환경을 의미한다.
+
+이 환경에는 변수, 함수 호출 스택, this 바인딩 정보 등이 포함된다. 코드의 실행 흐름에 따라 여러 개의 실행 컨텍스트가 쌓이게 되며, 이를 **실행 컨텍스트 스택(콜스택)**이라 부른다.
+
+[→ 실행 컨텍스트 자세한 내용](https://www.notion.so/2023-07-25-Execution-Context-dc581f2d744b4577958b3e0e6f88ec9a?pvs=21)
+
+실행 컨텍스트의 핵심 구성요소 중 하나가 바로 **렉시컬 환경**이다.
+렉시컬 환경은 이름 그대로 어휘적 환경을 나타내며, **식별자와 식별자에 할당된 값**들, 그리고 **참조하는 외부 환경 정보**로 구성된다.
+
+렉시컬 환경은 다음과 같은 구성요소로 이루어져 있다:
+
+1. **환경 레코드(Environment Record)**
+   1. 현재 컨텍스트 내의 모든 지역 변수, 함수 선언, arguments 객체 등을 저장하는 곳이다.
+2. **외부 렉시컬 환경에 대한 참조(Outer Reference)**
+   1. 바깥쪽 부모 환경을 참조한다. 이 특성은 스코프 체인을 형성하는 데 중요한 역할을 한다.
+
+결론적으로, 렉시컬 환경은 현재 실행 중인 실행 컨텍스트와 관련된 식별자와 그 값을 관리하며, 코드가 어휘적으로 작성된 위치를 기준으로 어떤 변수에 접근할 수 있는지를 결정한다. 이러한 특성이 바로 자바스크립트의 스코프와 클로저의 핵심 원리가 된다.
+
+## Closure 동작 원리
+
+---
+
+클로저는 렉시컬 환경의 특성을 활용한다. 내부 함수는 자신이 선언된 위치의 렉시컬 환경을 기억하므로, 그 환경 외부에서 실행될 때에도 그 환경에 접근이 가능하다.
+
+따라서, 함수가 선언된 어휘적 환경과 그 함수 자체를 조합한 것을 클로저라 부른다.
+
+```jsx
+function createCounter() {
+  let count = 0; // 이 변수는 createCounter 함수의 렉시컬 환경에 있다.
+
+  return function () {
+    return count++; // 이 내부 함수는 바깥 함수의 렉시컬 환경에 접근한다.
+  };
+}
+
+let counter = createCounter();
+
+console.log(counter()); // 0
+console.log(counter()); // 1
+console.log(counter()); // 2
+```
+
+// 전역 렉시컬 환경
+
+```jsx
+{
+    outerEnvironment: null,
+    variables: {
+        createCounter: <reference to the function createCounter>,
+        counter: <reference to the returned inner function>
+    }
+}
+```
+
+// `createCounter` 함수의 렉시컬 환경
+
+```jsx
+{
+    outerEnvironment: <reference to the global environment>,
+    variables: {
+        count: 0
+    }
+}
+```
+
+// 반환된 내부 함수(클로저)의 렉시컬 환경
+
+```jsx
+{
+    outerEnvironment: <reference to the createCounter's environment>,
+    variables: {}
+}
+```
+
+**`count`** 변수는 **`createCounter`** 함수의 렉시컬 환경에 있으므로 일반적인 경우에는 외부에서 접근할 수 없다.
+
+하지만, **`createCounter`** 함수에 의해 반환된 함수는 자신이 선언된 위치의 렉시컬 환경, 즉 **`createCounter`** 함수의 렉시컬 환경을 **_"기억"_**하고 있기 때문에, **`count`** 변수에 접근하고 수정할 수 있다.
+
+### 함수는 이미 종료된 상태인데 어떻게 외부 함수의 렉시컬 환경에 접근할 수 있을까?
+
+---
+
+이는 자바스크립트의 메모리 관리 즉, 가비지 컬렉터와 깊게 연관되어 있다.
+
+가비지 컬렉터는 객체 도달성이라는 원리를 사용해 객체에 더 이상 접근할 방법이 없을 때 해당 객체를 메모리에서 해제하는 프로세스이다.
+
+그런데 클로저에 의해 생성된 함수는 자신이 선언된 렉시컬 환경을 “참조”하기 때문에, 그 렉시컬 환경은 여전히 “살아있는” 상태이고 메모리에서 해제되지 않는다.
+
+이를 통해, 내부 함수(클로저)는 외부 함수가 종료된 후에도 외부 함수의 렉시컬 환경에 접근할 수 있다
+외부 함수가 종료된 후에도 그 함수의 렉시컬 환경은 메모리에 남아 있기 때문이다.
+
+## 클로저가 발생하는 경우
+
+---
+
+### 1. 내부 함수
+
+---
+
+함수 내부에 정의된 다른 함수가 있을 때, 이 내부 함수는 외부 함수의 변수에 접근할 수 있다. 외부 함수의 실행이 끝나더라도 내부 함수가 외부 함수의 변수에 접근할 수 있으면 클로저가 형성된다.
+
+```tsx
+function outerFunction() {
+  var outerVar = "외부 변수 입니다.";
+
+  function innerFunction() {
+    console.log(outerVar); // "외부 변수 입니다."
+  }
+
+  innerFunction();
+}
+
+outerFunction();
+```
+
+### 2. 콜백 함수
+
+---
+
+비동기 함수나 이벤트 핸들러와 같은 콜백을 사용할 때, 해당 콜백이 선언된 어휘적 환경의 변수에 접근할 수 있다. 이것도 클로저의 한 형태이다.
+
+```jsx
+function createTimer(message) {
+  setTimeout(function () {
+    console.log(message);
+  }, 1000);
+}
+
+createTimer("Hello after 1 second"); // 1초 후 출력: Hello after 1 second
+```
+
+### 3. 데이터 프라이버시와 팩토리 함수
+
+---
+
+객체의 상태를 숨기기 위해 클로저를 사용하는 팩토리 함수나 생성자 함수에서도 클로저가 발생한다.
+
+```jsx
+function createCounter() {
+  let count = 0;
+
+  return {
+    increment: function () {
+      count++;
+    },
+    getCount: function () {
+      return count;
+    },
+  };
+}
+
+const counter = createCounter();
+counter.increment();
+console.log(counter.getCount()); // 출력: 1
+```
+
+### 4. 부분적으로 적용된 함수 또는 커링
+
+---
+
+일부 인수만을 취하여 함수를 반환하는경우, 그 함수는 원래 함수의 인수에 접근할 수 있는 클로저를 형성한다.
+
+```jsx
+function greet(greeting, name) {
+  return `${greeting}, ${name}!`;
+}
+
+function greetHello(name) {
+  return greet("Hello", name);
+}
+
+console.log(greetHello("Alice")); // 출력: Hello, Alice!
+```
+
+## Using Closure
+
+---
+
+클로저는 일반적으로 객체에 데이터 프라이버시를 부여하는 데 사용된다.
+
+### Data Privacy
+
+---
+
+자바스크립트에서 데이터 프라이버시는 주로 객체의 데이터를 숨기고 제한된 방식으로만 접근하도록 하는 것을 포함한다.
+
+**_캡슐화_**
+
+---
+
+객체의 상태와 행동을 하나로 묶는 것을 의미한다. 클로저를 사용하면 객체의 특정 데이터를 외부에서 직접적으로 알 수 없도록 숨기면서, 그 데이터에 접근하거나 조작할 수 있는 메서드만을 외부에 노출시킬 수 있다.
+
+**_은닉화_**
+
+---
+
+객체의 내부 구현 세부사항을 외부로부터 숨기는 것을 의미한다. 클로저를 사용하면 특정 변수나 함수를 외부의 접근으로부터 보호하면서, 해당 범위 내에서만 사용될 수 있도록 만들 수 있다.
+
+```jsx
+function createPerson(name, age) {
+  // 'name'과 'age'는 createPerson 함수의 지역 변수로 외부에서 접근 불가능
+  return {
+    getName: function () {
+      return name;
+    },
+    setAge: function (newAge) {
+      age = newAge;
+    },
+    getAge: function () {
+      return age;
+    },
+  };
+}
+
+const person = createPerson("Alice", 30);
+console.log(person.getName()); // "Alice"
+// person.name 또는 person.age로는 직접 접근할 수 없다.
+```
+
+위의 코드에서 `name` 과 `age` 는 외부로부터 숨겨져 있고, 오직 `getName`, `getAge`, `setAge` 메서드를 통해서만 접근하거나 수정할 수 있다.
+
+이렇게 클로저를 활용하면 객체의 내부 데이터에 대한 프라이버시를 유지하면서도 필요한 연산을 수행할 수 있는 메서드를 제공하는 캡슐화와 은닉화를 구현할 수 있다.

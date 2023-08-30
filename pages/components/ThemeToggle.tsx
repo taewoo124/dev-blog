@@ -1,17 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
-
-  const handleDarkMode = () => {
-    setIsDark(!isDark);
+  const handleIconClick = () => {
+    window.alert("다크모드는 준비중입니다.");
   };
-
   return (
-    <div>
+    <>
       <button
         title="Toggle Theme"
-        onClick={handleDarkMode}
+        onClick={handleIconClick}
         className="border-none bg-transparent cursor-pointer rounded p-2"
       >
         <svg
@@ -28,21 +25,21 @@ function ThemeToggle() {
         >
           <path
             pathLength="1"
-            className={`moon-icon stroke-current transition-opacity duration-500 ${
-              isDark ? "opacity-100" : "opacity-0"
-            }`}
+            className={
+              "moon-icon stroke-current transition-opacity duration-500"
+            }
             d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
           ></path>
-          <circle
+          {/* <circle
             pathLength="1"
-            className={`sun-icon stroke-current transition-opacity duration-500 ${
-              isDark ? "opacity-0" : "opacity-100"
-            }`}
+            className={
+              "sun-icon stroke-current transition-opacity duration-500"
+            }
             cx="12"
             cy="12"
             r="5"
-          ></circle>
-          {[
+          ></circle> */}
+          {/* {[
             "0,-11",
             "0,11",
             "-11,0",
@@ -54,18 +51,18 @@ function ThemeToggle() {
           ].map((d, i) => (
             <line
               key={i}
-              className={`sun-icon stroke-current transition-opacity duration-500 ${
-                isDark ? "opacity-0" : "opacity-100"
-              }`}
+              className={
+                "sun-icon stroke-current transition-opacity duration-500"
+              }
               x1="12"
               y1="12"
               x2={`calc(12 + ${d.split(",")[0]})`}
               y2={`calc(12 + ${d.split(",")[1]})`}
-            ></line>
-          ))}
+            ></line> */}
+          {/* ))} */}
         </svg>
       </button>
-    </div>
+    </>
   );
 }
 

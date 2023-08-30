@@ -21,7 +21,7 @@ export default function XScrollBar(): React.ReactElement {
 
   const getGradientColor = () => {
     const r = Math.min(255, Math.floor((scrollPercentage / 100) * 255));
-    return `rgb(${5 - r}, 0, ${200 - r})`;
+    return `rgb(${5 - r}, 0, ${5 - r})`;
   };
 
   const gradientColor = getGradientColor();

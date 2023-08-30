@@ -3,9 +3,9 @@ import { getAllPosts } from "@/libs/post";
 import { serializeMdx } from "@/libs/mdx";
 import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 import { Post, TableOfContents } from "@/libs/types";
-import Title from "./components/Title";
-import Header from "./components/Header";
-import Sidebar from "./components/SideBar";
+import Title from "../components/Title";
+import Header from "../components/Header";
+import Sidebar from "../components/SideBar";
 import { parseToc } from "@/libs/toc";
 
 export const getStaticPaths: GetStaticPaths = () => {

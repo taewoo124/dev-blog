@@ -15,8 +15,8 @@ const config: Config = {
       "2xl": "1536px",
     },
     colors: {
-      black: "#000000",
-      white: "#ffffff",
+      black: "#0f0f0f",
+      white: "#f0f0f0",
       blue: "#1fb6ff",
       gray: "#8492a6",
       navy: "#19376d",
@@ -30,9 +30,10 @@ const config: Config = {
       "light-navy": "#576CBC",
       "gray-dark": "#273444",
       "gray-light": "#d3dce6",
+      "light-white": "#ffffff",
     },
     fontFamily: {
-      sans: ["Graphik", "sans-serif"],
+      sans: ["Pretendard", "Graphik", "sans-serif"],
       serif: ["Merriweather", "serif"],
     },
   },
