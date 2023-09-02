@@ -32,7 +32,7 @@ export default function Sidebar({
         className
       )}
     >
-      {tableOfContents.length !== 0 && (
+      {tableOfContents && tableOfContents.length !== 0 && (
         <div className="p-4 pl-7 dark:border-neutral-700 dark:bg-neutral-800">
           <ul
             id="toc-content"
