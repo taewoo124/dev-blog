@@ -64,8 +64,21 @@ export default function Header(): React.ReactElement {
               </Link>
             </HeaderLink>
             <HeaderLink>
-              <ThemeToggle />
+              <Link
+                target="blank"
+                href="https://www.notion.so/Learning-Record-da39ff869c8c45b7a7ddcc1dbe2ebc63"
+              >
+                <Image
+                  src="/notion.png"
+                  alt="Terminal_Image"
+                  width={45}
+                  height={45}
+                />
+              </Link>
             </HeaderLink>
+            {/* <HeaderLink>
+              <ThemeToggle />
+            </HeaderLink> */}
           </nav>
         </div>
       </header>
