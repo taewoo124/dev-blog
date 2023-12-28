@@ -49,10 +49,11 @@ export default function Page({
       <div className="w-7/12">
         <Header />
         <Title post={post} />
-        <div className="flex mt-12">
+        <div className="flex mt-12 ">
           <div className="prose flex flex-col">
             <MDXRemote {...mdx} />
           </div>
+
           <Sidebar tableOfContents={tableOfContents} />
         </div>
       </div>

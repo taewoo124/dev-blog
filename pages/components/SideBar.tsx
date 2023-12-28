@@ -28,7 +28,7 @@ export default function Sidebar({
   return (
     <div
       className={$(
-        "overflow-hidden w-3/4 h-fit sticky top-80 ml-12 rounded-xl border border-neutral-200 transition-all dark:border-neutral-800 hidden xl:block",
+        "overflow-hidden w-full h-fit sticky top-80 ml-12 rounded-xl border border-neutral-200 transition-all dark:border-neutral-800 hidden xl:block",
         className
       )}
     >

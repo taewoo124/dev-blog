@@ -226,7 +226,7 @@ c = multiply(20, 30);
 
 위의 코드가 실행되면 자바스크립트 엔진은 전역 코드를 실행하기 위해 전역 실행 컨텍스트를 생성한. 따라서 생성 단계에서 글로벌 실행 컨텍스트는 다음과 같은 모양이 된다
 
-```jsx
+```js
 GlobalExectionContext = {
   LexicalEnvironment: {
     EnvironmentRecord: {
@@ -253,7 +253,7 @@ GlobalExectionContext = {
 
 실행 단계에서 변수 할당이 완료된다. 따라서 실행 단계에서 글로벌 실행 컨텍스트는 다음과 같이 표시된다.
 
-```jsx
+```js
 GlobalExectionContext = {
 LexicalEnvironment: {
     EnvironmentRecord: {
@@ -280,7 +280,7 @@ VariableEnvironment: {
 
 함수 `multiply(20, 30)`에 대한 호출이 발생하면 함수 코드를 실행하기 위한 새로운 함수 실행 컨텍스트가 생성된다. 따라서 함수 실행 컨텍스트는 생성 단계에서 다음과 같은 모양이 된다.
 
-```jsx
+```js
 FunctionExectionContext = {
 LexicalEnvironment: {
     EnvironmentRecord: {
@@ -305,7 +305,7 @@ VariableEnvironment: {
 
 그 후 실행 컨텍스트는 실행 단계를 거치게 되는데, 이는 함수 내부의 변수에 대한 할당이 수행됨을 의미한다. 따라서 실행 단계에서 함수 실행 컨텍스트는 다음과 같은 모양이 된다.
 
-```jsx
+```js
 FunctionExectionContext = {
 LexicalEnvironment: {
     EnvironmentRecord: {

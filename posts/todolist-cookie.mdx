@@ -1,0 +1,209 @@
+---
+title: 쿠키(Cookie) 적용기
+date: 2023-12-28
+tags:
+  - Browser
+  - Cookie
+---
+
+# 쿠키(Cookie) 적용기
+
+지난번 Cookie에 대해서 알아보았다. 이번에는 간단한 Todolist앱을 만들어서 Cookie를 적용해보려고 한다.
+document.cookie를 사용하지 않고 js-cookie 라이브러리를 사용해보려고 한다.
+그 이유는 다음과 같다.
+
+1. document.cookie는 쿠키를 추가할 때, 기존에 존재하는 쿠키를 덮어쓰기 때문에 쿠키를 추가할 때마다 기존의 쿠키를 가져와서 다시 써줘야한다.
+2. document.cookie는 쿠키를 삭제할 때, 쿠키의 만료시간을 현재시간으로 설정해주어야한다.
+3. document는 HttpOnly 쿠키에 접근할 수 없다.
+
+이제 간단한 Todolist앱을 만들어보자.
+
+```js
+import { useState } from "react";
+import TodoRow from "./components/TodoRow";
+
+function App() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Learn React", completed: false },
+    { id: 2, text: "Learn TypeScript", completed: false },
+    { id: 3, text: "Learn GraphQL", completed: false },
+  ]);
+  const [newTodo, setNewTodo] = useState("");
+  console.log(document.cookie);
+
+  function handleNewTodoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewTodo(event.target.value);
+  }
+
+  function handleNewTodoAdd() {
+    if (newTodo === "") {
+      return alert("Todo text cannot be empty");
+    }
+
+    setTodos([
+      ...todos,
+      {
+        id: todos.length + 1,
+        text: newTodo,
+        completed: false,
+      },
+    ]);
+    setNewTodo("");
+  }
+
+  function handleTodoDelete(todoId: number) {
+    setTodos(todos.filter((todo) => todo.id !== todoId));
+  }
+
+  return (
+    <div>
+      {todos.map((todo) => (
+        <TodoRow
+          todo={todo}
+          key={todo.text}
+          handleTodoDelete={handleTodoDelete}
+        />
+      ))}
+      <input
+        type="text"
+        value={newTodo}
+        onChange={handleNewTodoChange}
+        placeholder="New Todo"
+      />
+
+      <button onClick={handleNewTodoAdd}>Add</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+![Before-Cookie](/cookie/before-cookie.gif)
+
+간단히 Todo를 추가하고 삭제하는 기능을 구현해보았다. Add 기능과 Delete 기능은 정상적으로 작동되지만,
+새로고침을 하면 Todo가 사라지는 것을 볼 수 있다. 이제 Cookie를 적용해보자.
+
+우선 js-cookie를 설치해준다.
+
+```bash
+npm install js-cookie
+```
+
+그리고 다음과 같이 import 해준다.
+
+![import-js-cookie](/cookie/import-js-cookie.png)
+
+이제 Cookie를 적용해보자.
+
+![get-cookie](/cookie/get-cookie.png)
+useState안에 콜백 함수를 넣어주어서 쿠키를 가져온다. 만약 쿠키가 존재하지 않을 경우 default값으로 3개의 todo를 넣어주었다.
+
+이제 브라우저 개발자도구의 Application 탭에서 쿠키를 확인해보자.
+![browser-cookie](/cookie/browser-cookie.png)
+정상적으로 쿠키가 생성된 것을 볼 수 있다.
+
+`Cookie.get("todos")` 로 가져온 쿠키는 문자열이다.
+![before-parse](/cookie/before-parse.png)
+
+따라서 `JSON.parse`를 사용해서 객체로 변환해주어야한다.
+![after-parse](/cookie/after-parse.png)
+
+이제 쿠키를 추가해보자. 쿠키를 추가할 때는 `Cookie.set`을 사용한다. todos가 업데이트 될 때 마다 쿠키를 추가해주어야하기 때문에 useEffect를 사용해주었다.
+![set-cookie](/cookie/set-cookie.png)
+
+이제 새로고침을 해보자. 새로고침을 해도 Todo가 사라지지 않는 것을 볼 수 있다.
+![after-cookie](/cookie/after-cookie.gif)
+
+전체 코드
+
+```js
+import { useState, useEffect } from "react";
+import TodoRow from "./components/TodoRow";
+import Cookies from "js-cookie";
+import { TodoType } from "./types";
+
+function App() {
+  const [todos, setTodos] = useState(() => {
+    const saveTodos = Cookies.get("todos"); // 쿠키에서 todos 가져오기
+    if (saveTodos) console.log(JSON.parse(saveTodos));
+
+    return saveTodos
+      ? JSON.parse(saveTodos) // 만약 쿠키에 todos가 있다면 파싱해서 반환
+      : [
+          {
+            id: 1,
+            text: "Learn React",
+          },
+          {
+            id: 2,
+            text: "Learn TypeScript",
+          },
+          {
+            id: 3,
+            text: "Learn GraphQL",
+          },
+        ];
+  });
+  const [newTodo, setNewTodo] = useState("");
+
+  function handleNewTodoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewTodo(event.target.value);
+  }
+
+  function handleNewTodoAdd() {
+    if (newTodo === "") {
+      return alert("Todo text cannot be empty");
+    }
+
+    setTodos([
+      ...todos,
+      {
+        id: todos.length + 1,
+        text: newTodo,
+        completed: false,
+      },
+    ]);
+    setNewTodo("");
+  }
+
+  function handleTodoDelete(todoId: number) {
+    setTodos(todos.filter((todo: TodoType) => todo.id !== todoId));
+  }
+
+  useEffect(() => {
+    Cookies.set("todos", JSON.stringify(todos)); // todos 업데이트 마다 쿠키에 저장
+  }, [todos]);
+
+  return (
+    <div>
+      {todos.map((todo: TodoType) => (
+        <TodoRow
+          todo={todo}
+          key={todo.text}
+          handleTodoDelete={handleTodoDelete}
+        />
+      ))}
+      <input
+        type="text"
+        value={newTodo}
+        onChange={handleNewTodoChange}
+        placeholder="New Todo"
+      />
+
+      <button onClick={handleNewTodoAdd}>Add</button>
+    </div>
+  );
+}
+
+export default App;
+```
+
+이렇게 쿠키를 사용해 클라이언트 측에서 데이터를 저장할 수 있다. 하지만 쿠키는 보안에 취약하고, 용량이 작다는 단점이 있다.
+
+이렇게 보안에 취약한 쿠키를 위해 js-cookie는 HttpOnly 쿠키를 사용할 수 있도록 해준다.
+
+## HttpOnly 쿠키란?
+
+HttpOnly 쿠키는 JavaScript에서 접근할 수 없는 쿠키이다. 이 쿠키는 서버와 클라이언트 간의 통신에만 사용된다. 따라서 XSS 공격을 방지할 수 있다.
+HttpOnly 쿠키는 서버에서 생성되기 때문에 지금 클라이언트만 있는 환경에서는 사용할 수 없다. 따라서 실습은 다음 시간에 해보도록 하겠다.
