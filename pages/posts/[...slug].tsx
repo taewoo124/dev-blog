@@ -7,6 +7,7 @@ import Title from "../components/Title";
 import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import { parseToc } from "@/libs/toc";
+import Footer from "../components/Footer";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();
@@ -53,9 +54,9 @@ export default function Page({
           <div className="prose flex flex-col">
             <MDXRemote {...mdx} />
           </div>
-
           <Sidebar tableOfContents={tableOfContents} />
         </div>
+        <Footer />
       </div>
     </div>
   );
