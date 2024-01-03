@@ -45,9 +45,13 @@ const config: Config = {
       medium: "500",
       semibold: "600",
       bold: "700",
-      extrabold: "800",
       "extra-bold": "800",
       black: "900",
+    },
+    extend: {
+      animation: {
+        spin: "spin 1s linear infinite",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],
