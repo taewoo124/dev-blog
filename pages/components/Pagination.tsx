@@ -25,17 +25,15 @@ export default function Pagination({
 
   const handleRightArrowClick = () => {
     if (currentPage < pageNumbers.length) paginate(currentPage + 1);
-
-    return window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+  console.log(currentPage);
   return (
     <nav className="flex justify-center items-center">
       <FontAwesomeIcon
         icon={faArrowLeft}
         style={{ fontSize: "24px" }}
         className={`text-navy hover:text-blue px-4 py-2 cursor-pointer ${
-          currentPage <= 1 ? "cursor-not-allowed" : ""
+          currentPage <= 1 ? "hover:cursor-not-allowed" : ""
         }`}
         onClick={handleLeftArrowClick}
       />
@@ -55,7 +53,7 @@ export default function Pagination({
         icon={faArrowRight}
         style={{ fontSize: "24px" }}
         className={`text-navy hover:text-blue px-4 py-2 cursor-pointer ${
-          currentPage >= pageNumbers.length ? "cursor-not-allowed" : ""
+          currentPage >= pageNumbers.length ? "hover:cursor-not-allowed" : ""
         }`}
         onClick={handleRightArrowClick}
       />

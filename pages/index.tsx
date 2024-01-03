@@ -46,7 +46,11 @@ export default function PostPage({
     indexOfLastPost
   );
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+
+    return window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <MainWrapper>
       <div className="sm:flex flex-col items-center">
