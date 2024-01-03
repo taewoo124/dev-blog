@@ -1,9 +1,17 @@
-import { getAllPosts } from "@/libs/post";
+import { useState } from "react";
 import Link from "next/link";
-import { Post } from "@/libs/types";
 import Header from "./components/Header";
 import Intro from "./components/Intro";
 import PostBanner from "./components/PostBanner";
+import TagSelector from "./components/TagSelector";
+import { getAllPosts } from "@/libs/post";
+import {
+  getAllTags,
+  getFilteredPostsByTag,
+  getSortedPostsByDate,
+} from "@/src/utils/handlePosts";
+
+import type { Post } from "@/libs/types";
 
 export const getStaticProps = () => {
   return {
@@ -18,8 +26,13 @@ export default function PostPage({
 }: {
   posts: Post[];
 }): React.ReactElement {
-  const sortedPosts = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const sortedPostByDate = getSortedPostsByDate(posts);
+  const allTags = getAllTags(posts);
+  const filterdPostbyTags = getFilteredPostsByTag(
+    sortedPostByDate,
+    selectedTags
   );
 
   return (
@@ -27,9 +40,14 @@ export default function PostPage({
       <div className="w-7/12">
         <Header />
         <Intro />
+        <TagSelector
+          allTags={allTags}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
       </div>
       <div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
-        {sortedPosts.map((post, i) => (
+        {filterdPostbyTags.map((post, i) => (
           <Link key={i} href={post.slug} className="pointer">
             <PostBanner title={post.title} tags={post.tags} date={post.date} />
           </Link>
