@@ -116,23 +116,25 @@ foo() // 약 3초 소요
 - 에러가 발생한 경우 – `{status:"rejected", reason:error}`
 
 ```jsx
-let promise1 = Promise.resolve(3);
-let promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, "foo"));
-let promise3 = Promise.resolve("bar");
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve, reject) =>
+  setTimeout(reject, 100, "foo")
+);
+const promise3 = Promise.resolve("bar");
 
 Promise.allSettled([promise1, promise2, promise3]).then((results) => {
   results.forEach((result, index) => {
     console.log(
-      `프로미스 ${index + 1}: ${result.status} - ${
+      `promise ${index + 1}: ${result.status} - ${
         result.value || result.reason
       }`
     );
   });
 });
 
-// 프로미스 1: fulfilled - 3
-// 프로미스 2: rejected - foo
-// 프로미스 3: fulfilled - bar
+// promise1: fulfilled - 3
+// promise2: rejected - foo
+// promise3: fulfilled - bar
 ```
 
 ### Promise.any(iterable)
@@ -202,9 +204,15 @@ Promise.race([
 
 ```jsx
 Promise.race([
-  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 1"), 3000)),
-  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 2"), 2000)),
-  new Promise((_, reject) => setTimeout(() => reject(new Error("Error 3"), 1000))
+  new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Error 1")), 3000)
+  ),
+  new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Error 2")), 2000)
+  ),
+  new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("Error 3")), 1000)
+  ),
 ])
   .then(console.log)
   .catch(console.log); // Error: Error 3

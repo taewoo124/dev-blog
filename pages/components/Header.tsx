@@ -3,7 +3,6 @@ import HeaderLink from "./HeaderLink";
 import XScrollBar from "./XScrollBar";
 import Link from "next/link";
 import Image from "next/image";
-import ThemeToggle from "./ThemeToggle";
 
 export default function Header(): React.ReactElement {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -76,9 +75,6 @@ export default function Header(): React.ReactElement {
                 />
               </Link>
             </HeaderLink>
-            {/* <HeaderLink>
-              <ThemeToggle />
-            </HeaderLink> */}
           </nav>
         </div>
       </header>

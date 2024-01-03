@@ -33,6 +33,7 @@ export const getAllPosts = () => {
   const postPaths: string[] = sync(`${POSTS_PATH}/**/*.mdx`);
   return postPaths.reduce<Post[]>((acc, postPath) => {
     const post = parsePost(postPath);
+
     if (!post) return acc;
 
     return [...acc, post];
