@@ -4,10 +4,8 @@ import { serializeMdx } from "@/libs/mdx";
 import { MDXRemoteSerializeResult, MDXRemote } from "next-mdx-remote";
 import { Post, TableOfContents } from "@/libs/types";
 import Title from "../components/Title";
-import Header from "../components/Header";
 import Sidebar from "../components/SideBar";
 import { parseToc } from "@/libs/toc";
-import Footer from "../components/Footer";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const posts = getAllPosts();
@@ -48,7 +46,6 @@ export default function Page({
   return (
     <div className="flex justify-center ">
       <div className="w-7/12">
-        <Header />
         <Title post={post} />
         <div className="flex mt-12 ">
           <div className="prose flex flex-col">
@@ -56,7 +53,6 @@ export default function Page({
           </div>
           <Sidebar tableOfContents={tableOfContents} />
         </div>
-        <Footer />
       </div>
     </div>
   );

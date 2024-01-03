@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Link from "next/link";
-import Header from "./components/Header";
 import Intro from "./components/Intro";
 import PostBanner from "./components/PostBanner";
 import TagSelector from "./components/TagSelector";
+import Pagination from "./components/Pagination";
 import { getAllPosts } from "@/libs/post";
 import {
   getAllTags,
@@ -12,6 +12,8 @@ import {
 } from "@/src/utils/handlePosts";
 
 import type { Post } from "@/libs/types";
+import { POSTPERPAGE } from "@/src/constants/page";
+import MainWrapper from "./components/MainWrapper";
 
 export const getStaticProps = () => {
   return {
@@ -27,32 +29,52 @@ export default function PostPage({
   posts: Post[];
 }): React.ReactElement {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const sortedPostByDate = getSortedPostsByDate(posts);
   const allTags = getAllTags(posts);
+  const sortedPostByDate = getSortedPostsByDate(posts);
   const filterdPostbyTags = getFilteredPostsByTag(
     sortedPostByDate,
     selectedTags
   );
 
+  const indexOfLastPost = currentPage * POSTPERPAGE;
+  const indexOfFirstPost = indexOfLastPost - POSTPERPAGE;
+
+  const currentPosts = filterdPostbyTags.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   return (
-    <div className="sm:flex hidden flex-col items-center">
-      <div className="w-7/12">
-        <Header />
-        <Intro />
-        <TagSelector
-          allTags={allTags}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
+    <MainWrapper>
+      <div className="sm:flex flex-col items-center">
+        <div className="w-7/12">
+          <Intro />
+          <TagSelector
+            allTags={allTags}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        </div>
+        <div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
+          {currentPosts.map((post, i) => (
+            <Link key={i} href={post.slug} className="pointer">
+              <PostBanner
+                title={post.title}
+                tags={post.tags}
+                date={post.date}
+              />
+            </Link>
+          ))}
+        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPosts={filterdPostbyTags.length}
+          paginate={paginate}
         />
       </div>
-      <div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
-        {filterdPostbyTags.map((post, i) => (
-          <Link key={i} href={post.slug} className="pointer">
-            <PostBanner title={post.title} tags={post.tags} date={post.date} />
-          </Link>
-        ))}
-      </div>
-    </div>
+    </MainWrapper>
   );
 }

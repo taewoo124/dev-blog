@@ -1,0 +1,129 @@
+---
+title: "페이지네이션을 구현해보자"
+date: "2024-01-03"
+tags:
+  - Pagination
+  - React
+  - Blog
+---
+
+# 개요
+
+블로그에 개시글이 늘어남에 따라 스크롤을 많이 내리지 않고도 다음 개시글을 볼 수 있도록 페이지네이션 기능이 필요해졌다.
+
+현재는 아래와 같이 단순하게 포스트를 렌더링하고 있다. 현재는 포스트가 8개 정도이기 때문에 크게 불편함은 없지만 앞으로 늘어날 포스트를 대비하는게 좋을것 같다고 생각했다.
+
+따라서 리액트 컴포넌트를 이용하여 페이지네이션을 구현해보았다.
+
+# 구현
+
+## 초기 구현
+
+```tsx
+<div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
+  {filterdPostbyTags.map((post, i) => (
+    <Link key={i} href={post.slug} className="pointer">
+      <PostBanner title={post.title} tags={post.tags} date={post.date} />
+    </Link>
+  ))}
+</div>
+```
+
+페이지네이션을 구현하기 위한 간단한 아이디어는 다음과 같다.
+
+### 구현 계획
+
+1. 한 페이지에 렌더링할 포스트 개수를 정한다.
+2. 상태를 이용해 현재 페이지를 저장한다.
+3. 지정한 포스트 개수와 현재 페이지 상태를 이용해 현재 페이지에 해당하는 포스트만을 렌더링한다.
+
+4. 페이지네이션 컴포넌트를 만든다.
+5. 페이지네이션 컴포넌트에서 총 포스트 개수와 렌더링 포스트 개수를 계산해 총 페이지를 구한다.
+6. 그 후 총 페이지 이용해 페이지네이션 숫자를 배열에 담는다.
+7. 또한 현재 페이지와 총 페이지를 이용하여 이전 페이지, 다음 페이지, 현재 페이지를 렌더링한다.
+
+이 플로우를 이용해 페이지네이션 컴포넌트를 구현해보았다.
+
+## 페이지네이션 컴포넌트 구현
+
+### 페이지 계산하기
+
+전체 페이지의 수를 알기 위해서는 먼저 전체 포스트의 개수를 알아야 한다. 그 후 한 화면에 보여줄 포스트의 개수를 정한다 나는 8개로 정했다.
+`const POSTPERPAGE = 8`;
+
+그리고 현재 페이지의 숫자 값에 따라 배열의 요소를 잘라주어야 하기 때문에 현재 페이지의 첫번째 인덱스와 마지막 인덱스를 계산해주어야 했다.
+
+```tsx
+const indexOfLastPost = currentPage * POSTPERPAGE;
+const indexOfFirstPost = indexOfLastPost - POSTPERPAGE;
+```
+
+이렇게 계산안 변수와 배열의 slice메서드를 사용해 현재 페이지에 해당하는 포스트만을 알아낼 수 있다.
+
+```tsx
+const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+```
+
+위에서 넘어간 부분이 있는데, currentpage 변수는 useState로 선언한 리액트 상태이다.
+이 상태를 통해 사용자의 이벤트에 따라 페이지를 변경하고, 몇번째 페이지인지 알 수 있다.
+
+먼저 페이지네이션 컴포넌트에 필요한 props를 정의해보면,
+
+```tsx
+interface PaginationProps {
+  totalPage: number;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+}
+```
+
+이렇게 정의하고, 이를 이용해 페이지네이션 컴포넌트를 구현해보았다.
+
+```tsx
+export default function Pagination({
+  currentPage,
+  totalPage,
+  setCurrentPage,
+}: PaginationProps) {
+  const pageNumbers = []; // 먼저 포스트 양에 따른 페이지를 계산해 배열에 담는다.
+
+  for (let i = 1; i <= Math.ceil(totalPosts / POSTPERPAGE); i++) {
+    pageNumbers.push(i);
+  } // 페이지네이션 숫자 배열
+}
+```
+
+이제 이 배열을 이용해 페이지네이션 컴포넌트를 완성할 수 있다.
+
+```tsx
+...
+<ul className="flex justify-center items-center">
+  {pageNumbers.map((number) => (
+    <li key={number}>
+      <a
+        onClick={() => setCurrentPage(number)}
+        className="text-navy hover:text-blue px-4 py-2 cursor-pointer"
+      >
+        {number}
+      </a>
+    </li>
+  ))}
+</ul>
+```
+
+이제 사용자가 입력한 숫자에 따라 currentPage가 변경되고, 이를 이용해 지정한 숫자만큼 포스트를 렌더링 할 수 있다.
+
+## 마무리
+
+이렇게 페이지네이션을 구현해보았다. 개념만 알고 있을때는 사실 쉽게 구현할 수 있을 것 같았는데, 실제로 직접 구현해보니 생각보다 복잡한 부분이 있었다.
+
+예를들어, 페이지네이션 컴포넌트를 구현할 때 페이지네이션 숫자를 렌더링하는 부분에서, 현재 페이지에 따라 해당하는 포스트를 렌더링해야하는 경우를 처음 구현할 때
+단순히 슬라이스 메서드에 slice(0, 8)을 입력해 첫번째 페이지를 렌더링하고, slice(8, 16)을 입력해 두번째 페이지를 렌더링하는 식으로 구현하려고 했는데,
+이렇게 구현하면 페이지네이션 컴포넌트를 렌더링할 때마다 페이지네이션 숫자를 계산해야 했다.
+따라서 변수를 선언해 계산하니 이런부분이 해결되었다.
+
+어렵지 않은 부분이지만 처음에 이런 부분을 고려하지 않고 구현하다보니, 코드가 복잡해지고, 불필요한 계산이 많아지는 문제가 있었다. 이런 부분을 고려하며 코드를 작성하는 습관을 들여야겠다.
+
+마지막으로 화살표를 통해 이전 페이지, 다음 페이지로 이동하는 기능을 구현하면서 마무리했다.
+
+![pagination](/pagination/pagination.gif)

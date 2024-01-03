@@ -10,9 +10,9 @@ export default function Footer(): React.ReactElement {
           <div>
             <h1 className="mb-2">About</h1>
             <ul className="text-gray">
-              <li>✉️ taewoo124@gmail.com</li>
-              <li>☏ 010-4926-8338</li>
-              <li>Kim Tae Woo</li>
+              <li>이름: 김 태우</li>
+              <li>이메일: taewoo124@gmail.com</li>
+              <li>전화번호: 010-4926-8338</li>
             </ul>
           </div>
           <div>
@@ -20,7 +20,7 @@ export default function Footer(): React.ReactElement {
             <ul className="text-gray">
               <li>
                 <Link target="blank" href="https://harmonyHub.site">
-                  Harmony-Hub
+                  Harmony-Hub (개인 프로젝트)
                 </Link>
               </li>
               <li>
@@ -28,7 +28,7 @@ export default function Footer(): React.ReactElement {
                   target="blank"
                   href="https://github.com/Common-LKP/reactree-frontend"
                 >
-                  Reactree
+                  Reactree (팀 / 3인 프로젝트)
                 </Link>
               </li>
               <li>Comming Soon..</li>
@@ -75,7 +75,7 @@ export default function Footer(): React.ReactElement {
           <p>무작정 코드를 작성하지 않고</p>
           <p>이해하고 기록하는 것을 목표로 하는 블로그입니다.</p>
         </div>
-        <p className="text-gray-light font-thin">©2023</p>
+        <p className="text-gray-light font-thin">©2023-</p>
       </div>
     </footer>
   );
