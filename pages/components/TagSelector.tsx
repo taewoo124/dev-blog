@@ -23,7 +23,7 @@ export default function TagSelector({
   };
 
   return (
-    <div className="w-2/3 flex mt-8">
+    <div className="w-2/3 lg:flex mt-8 hidden">
       <div className="grid grid-cols-5 mr-8">
         {allTags &&
           allTags.map((tag) => (

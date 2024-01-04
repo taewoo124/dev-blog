@@ -45,7 +45,7 @@ export default function Page({
 }) {
   return (
     <div className="flex justify-center ">
-      <div className="w-7/12">
+      <div className="md:w-7/12">
         <Title post={post} />
         <div className="flex mt-12 ">
           <div className="prose flex flex-col">

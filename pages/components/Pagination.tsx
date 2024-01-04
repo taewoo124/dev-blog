@@ -26,7 +26,7 @@ export default function Pagination({
   const handleRightArrowClick = () => {
     if (currentPage < pageNumbers.length) paginate(currentPage + 1);
   };
-  console.log(currentPage);
+
   return (
     <nav className="flex justify-center items-center">
       <FontAwesomeIcon
@@ -41,8 +41,12 @@ export default function Pagination({
         {pageNumbers.map((number) => (
           <li key={number}>
             <a
-              onClick={() => paginate(number)}
-              className="text-navy hover:text-blue px-4 py-2 cursor-pointer"
+              onClick={() => {
+                paginate(number);
+              }}
+              className={` hover:text-blue px-4 py-2 cursor-pointer ${
+                currentPage === number ? "font-bold text-blue" : "text-navy"
+              }`}
             >
               {number}
             </a>

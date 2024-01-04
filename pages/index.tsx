@@ -1,9 +1,12 @@
 import { useState } from "react";
+
 import Link from "next/link";
 import Intro from "./components/Intro";
 import PostBanner from "./components/PostBanner";
 import TagSelector from "./components/TagSelector";
 import Pagination from "./components/Pagination";
+import MainWrapper from "./components/MainWrapper";
+
 import { getAllPosts } from "@/libs/post";
 import {
   getAllTags,
@@ -11,9 +14,9 @@ import {
   getSortedPostsByDate,
 } from "@/src/utils/handlePosts";
 
-import type { Post } from "@/libs/types";
 import { POSTPERPAGE } from "@/src/constants/page";
-import MainWrapper from "./components/MainWrapper";
+
+import type { Post } from "@/libs/types";
 
 export const getStaticProps = () => {
   return {
@@ -53,7 +56,7 @@ export default function PostPage({
   };
   return (
     <MainWrapper>
-      <div className="sm:flex flex-col items-center">
+      <div className="sm:flex flex flex-col items-center">
         <div className="w-7/12">
           <Intro />
           <TagSelector
@@ -62,7 +65,7 @@ export default function PostPage({
             setSelectedTags={setSelectedTags}
           />
         </div>
-        <div className="inline-grid gap-4 grid-cols-2 w-7/12 mt-16">
+        <div className="inline-grid md:grid-cols-2 sm:gap-4 grid-cols-1 w-7/12 mt-16">
           {currentPosts.map((post, i) => (
             <Link key={i} href={post.slug} className="pointer">
               <PostBanner

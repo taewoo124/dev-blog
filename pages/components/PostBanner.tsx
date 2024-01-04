@@ -8,7 +8,7 @@ export default function PostBanner({
   date: string;
 }): React.ReactElement {
   return (
-    <div className="flex flex-col p-6 border-2 mb-8 rounded-xl border-white hover:border-navy hover:text-navy rounded-1xl">
+    <div className="flex flex-col p-4 md:p-6 border-2 mb-8 rounded-xl border-white hover:border-navy hover:text-navy rounded-1xl">
       <div>
         <p className="text-3xl mb-6">{title}</p>
       </div>
