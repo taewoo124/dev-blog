@@ -1,0 +1,109 @@
+---
+title: "es14 문법 알아보기"
+description: "최근에 도입된 es14 문법을 알아보자!"
+date: 2024-01-06
+tags:
+  - Javascript
+  - ECMAScript
+---
+
+# es14 문법 알아보기
+
+## 새로 추가된 배열 관련 메서드
+
+이번에 새로 추가된 배열 관련 메서드들의 특징은 다음과 같다.
+
+1. 원본 배열을 수정하지 않고 새로운 배열을 반환한다.
+2. 따라서 사이드이펙트를 발생시키지 않는다.
+
+어떤 것들이 추가되었는지 알아보았다.
+
+## 사이드이펙트 제거 메서드
+
+### Array.prototype.toSorted
+
+기존 자바스크립트 정렬 메서드에는 대표적으로 `sort()` 메서드가 있다.
+
+```Javascript
+const arr = [1, 9, 4, 3, 11];
+const sortedArray = arr.sort((a, b) => a - b);
+
+console.log(arr); // [1, 3, 4, 9, 11]
+console.log(sortedArray); // [1, 3, 4, 9, 11]
+```
+
+이렇게 `sort()` 메서드는 원본 배열을 수정하고, 정렬된 배열을 반환한다. 이는 사이드이펙트를 발생시켜 예상치 못한 결과를 초래할 수 있다.
+그래서 보통 sort() 메서드를 사용할 때는 원본 배열을 복사한 후에 사용한다.
+
+```Javascript
+const arr = [1, 9, 4, 3, 11];
+const sortedArray = [...arr].sort((a, b) => a - b);
+
+console.log(arr); // [1, 9, 4, 3, 11]
+console.log(sortedArray); // [1, 3, 4, 9, 11]
+```
+
+이렇게 스프레드 연산자를 통해 원본 배열을 복사한 후에 사용하면 원본 배열을 수정하지 않고 정렬된 배열을 반환한다.<br/>
+하지만 이런 방법은 결국 `sort()` 메서드가 원본 배열을 수정하기 때문에 추가해줘야하는 부수적인 작업이라고 생각한다.
+
+따라서 이번 es14에서는 원본 배열을 수정하지 않는 `toSorted()` 메서드를 추가했다.
+
+```Javascript
+const arr = [1, 9, 4, 3, 11];
+const sortedArray = arr.toSorted((a, b) => a - b);
+
+console.log(arr); // [1, 9, 4, 3, 11]
+console.log(sortedArray); // [1, 3, 4, 9, 11]
+```
+
+이렇듯 `toSorted()` 메서드를 사용하면 굳이 원본 배열을 복사하지 않고도 사이드이펙트를 발생시키지 않고 배열을 정렬시킬 수 있다.
+
+이 외에도 `toReversed()`, `toSpliced()` 가 추가되었다.
+
+### Array.prototype.findLast, Array.prototype.findIndexLast
+
+이 메서드들은 이름에서 알 수 있듯이 `find()` 메서드와 `findIndex()` 메서드와 유사하다.<br/>
+차이점은 `find()` 메서드와 `findIndex()` 메서드는 배열의 앞에서부터 탐색을 하지만, `findLast()` 메서드와 `findIndexLast()` 메서드는 배열의 뒤에서부터 탐색을 한다는 것이다.
+
+```Javascript
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const find = arr.find((item) => item > 5);
+const findLast = arr.findLast((item) => item > 5);
+
+console.log(find); // 6
+console.log(findLast); // 9
+```
+
+```Javascript
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const findIndex = arr.findIndex((item) => item > 5);
+const findIndexLast = arr.findIndexLast((item) => item > 5);
+
+console.log(findIndex); // 5
+console.log(findIndexLast); // 8
+```
+
+### 이전에는 어떻게 뒤에서부터 값과 인덱스를 찾았을까?
+
+```Javascript
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+const findLast = [...arr].reverse().find((item) => item > 5);
+const findLastIndex = arr.lastIndexOf([...arr].reverse().find((item) => item > 5));
+```
+
+이렇게 `reverse()` 메서드를 통해 배열을 뒤집은 후에 `find()` 메서드를 사용하면 뒤에서부터 값을 찾을 수 있다.<br/>
+
+## Array.prototype.with
+
+이 메서드는 첫 번째 인자로 주어진 인덱스의 값을 두 번째 인자로 주어진 값으로 수정한 <b>새 배열</b>을 반환한다.
+
+![with](/with.png)
+
+### 이전에는 어떻게 했을까?
+
+![beforeWith](/beforeWith.png)
+
+이런식으로 slice 메서드와 스프레드연산자를 조합해 새로운 값을 삽입하여 실행했다. 직관적인 방법으로는 보이지 않는다.

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
 
@@ -10,6 +11,8 @@ export default function TagSelector({
   selectedTags: string[];
   setSelectedTags: (tags: string[]) => void;
 }): React.ReactElement {
+  const [isRotate, setIsRotate] = useState(false);
+
   const toggleTagSelection = (tag: string) => {
     if (selectedTags.includes(tag)) {
       setSelectedTags(selectedTags.filter((t) => t !== tag));
@@ -20,6 +23,10 @@ export default function TagSelector({
 
   const handleClearTags = () => {
     setSelectedTags([]);
+  };
+
+  const handleIconRotate = () => {
+    setIsRotate(!isRotate);
   };
 
   return (
@@ -44,8 +51,12 @@ export default function TagSelector({
       <FontAwesomeIcon
         icon={faRotate}
         size="2x"
-        className="hover:animate-spin cursor-pointer"
+        className={`${
+          isRotate ? "rotate-45" : ""
+        } cursor-pointer transition-transform duration-500`}
         onClick={handleClearTags}
+        onMouseOver={handleIconRotate}
+        onMouseLeave={handleIconRotate}
       />
     </div>
   );
