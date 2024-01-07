@@ -24,9 +24,9 @@ export default function Header(): React.ReactElement {
   }, [isScrolled]);
 
   return (
-    <div className="sticky top-0 z-50">
+    <div className="sticky top-0 z-50 sm:w-full">
       <header
-        className={`transition-all duration-300 bg-light-white border-b-2 border-gray px-4 ${
+        className={`transition-all duration-300  bg-light-white border-b-2 border-gray px-4 ${
           isScrolled ? "py-2" : "py-6"
         }`}
       >

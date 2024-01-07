@@ -44,11 +44,11 @@ export default function Page({
   tableOfContents: TableOfContents;
 }) {
   return (
-    <div className="flex justify-center ">
-      <div className="md:w-7/12">
+    <div className="flex justify-center">
+      <div className="sm:w-7/12 w-9/12">
         <Title post={post} />
         <div className="flex mt-12 ">
-          <div className="prose flex flex-col">
+          <div className="prose prose-neutral w-full max-w-2xl dark:prose-dark">
             <MDXRemote {...mdx} />
           </div>
           <Sidebar tableOfContents={tableOfContents} />

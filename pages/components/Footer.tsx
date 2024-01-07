@@ -6,7 +6,7 @@ export default function Footer(): React.ReactElement {
   return (
     <footer className="border-t border-gray-light rounded p-8 mt-12">
       <div className="flex flex-col justify-center items-center text-center gap-4">
-        <div className="flex gap-40">
+        <div className="flex sm:gap-30 gap-10">
           <div>
             <h1 className="mb-2">About</h1>
             <ul className="text-gray">

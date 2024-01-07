@@ -3,5 +3,5 @@ export default function MainWrapper({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-[1200px] sm:h-[1300px]">{children}</div>;
+  return <div className="h-[1350px] sm:h-[1400px]">{children}</div>;
 }
