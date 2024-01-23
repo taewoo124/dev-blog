@@ -48,16 +48,18 @@ export default function TagSelector({
             </p>
           ))}
       </div>
-      <FontAwesomeIcon
-        icon={faRotate}
-        size="2x"
-        className={`${
-          isRotate ? "rotate-45" : ""
-        } cursor-pointer transition-transform duration-500`}
-        onClick={handleClearTags}
-        onMouseOver={handleIconRotate}
-        onMouseLeave={handleIconRotate}
-      />
+      <div>
+        <FontAwesomeIcon
+          icon={faRotate}
+          className={`${
+            isRotate ? "rotate-45" : ""
+          } cursor-pointer transition-transform duration-500`}
+          onClick={handleClearTags}
+          onMouseOver={handleIconRotate}
+          onMouseLeave={handleIconRotate}
+          width="16"
+        />
+      </div>
     </div>
   );
 }
